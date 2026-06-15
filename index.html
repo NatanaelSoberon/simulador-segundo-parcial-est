@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Parcial 2 · Estadística Aplicada a los Negocios</title>
+<style>
+:root{
+  --bg:#FAFBFC;
+  --card:#FFFFFF;
+  --ink:#0F172A;
+  --ink-soft:#475569;
+  --ink-mute:#94A3B8;
+  --border:#E2E8F0;
+  --border-strong:#CBD5E1;
+  --accent:#0C6F9C;
+  --accent-soft:#E0F2FA;
+  --accent-dark:#075279;
+  --ok:#059669;
+  --ok-soft:#D1FAE5;
+  --bad:#DC2626;
+  --bad-soft:#FEE2E2;
+  --warn:#D97706;
+  --warn-soft:#FEF3C7;
+  --u3:#0C6F9C;
+  --u4:#7C3AED;
+  --shadow:0 1px 3px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
+  --shadow-lg:0 10px 25px -5px rgba(15,23,42,.08), 0 8px 10px -6px rgba(15,23,42,.04);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding:0;
+}
+.wrap{max-width:820px;margin:0 auto;padding:24px 20px 60px}
+
+/* Header */
+.hero{
+  margin-bottom:28px;
+  padding:28px 24px;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);
+  color:#fff;
+  border-radius:14px;
+  box-shadow:var(--shadow-lg);
+}
+.hero .eyebrow{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:.85;
+  margin-bottom:8px;
+}
+.hero h1{
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+.hero p{font-size:14px;opacity:.92;max-width:560px}
+
+/* Section heading */
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  margin:32px 0 14px;
+}
+.section-title::before{
+  content:"";
+  width:24px;height:2px;
+  background:var(--accent);
+  border-radius:2px;
+}
+
+/* Review panel */
+details.review{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  margin-bottom:24px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+details.review summary{
+  padding:18px 22px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:15px;
+  color:var(--ink);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  user-select:none;
+  list-style:none;
+}
+details.review summary::-webkit-details-marker{display:none}
+details.review summary::after{
+  content:"+";
+  font-size:22px;
+  color:var(--accent);
+  font-weight:300;
+  line-height:1;
+  transition:transform .2s;
+}
+details.review[open] summary::after{content:"−"}
+details.review summary:hover{color:var(--accent)}
+.review-body{padding:0 22px 22px;border-top:1px solid var(--border)}
+.review-body h3{
+  font-size:13px;
+  font-weight:700;
+  color:var(--accent-dark);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin:18px 0 10px;
+}
+.review-body h3:first-child{margin-top:18px}
+.review-body p{font-size:14px;color:var(--ink-soft);margin-bottom:8px}
+.review-body ul{margin:6px 0 10px 18px;font-size:14px;color:var(--ink-soft)}
+.review-body li{margin-bottom:5px}
+.review-body strong{color:var(--ink);font-weight:600}
+.formula{
+  font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  background:#F1F5F9;
+  padding:2px 6px;
+  border-radius:4px;
+  font-size:13px;
+  color:var(--ink);
+}
+.callout{
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  padding:10px 14px;
+  border-radius:6px;
+  font-size:13.5px;
+  margin:10px 0;
+  color:var(--ink);
+}
+
+/* Progress */
+.progress-bar-wrap{
+  position:sticky;top:0;z-index:10;
+  background:var(--bg);
+  padding:12px 0 14px;
+  margin-bottom:14px;
+}
+.progress-meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+  font-weight:500;
+}
+.progress-track{
+  height:6px;
+  background:var(--border);
+  border-radius:3px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  background:var(--accent);
+  border-radius:3px;
+  transition:width .35s ease;
+  width:0%;
+}
+
+/* Question card */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:24px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+.q-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border-radius:20px;
+  margin-bottom:14px;
+}
+.q-tag.u3{background:#E0F2FA;color:var(--u3)}
+.q-tag.u4{background:#EDE9FE;color:var(--u4)}
+.q-title{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:10px;
+  color:var(--ink);
+  line-height:1.4;
+}
+.q-context{
+  font-size:14.5px;
+  color:var(--ink-soft);
+  margin-bottom:14px;
+  padding-bottom:14px;
+  border-bottom:1px dashed var(--border);
+}
+.q-context p+p{margin-top:8px}
+.q-prompt{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:16px;
+  color:var(--ink);
+}
+
+/* Options */
+.options{display:flex;flex-direction:column;gap:10px}
+.option{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:13px 15px;
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .15s;
+  font-size:14.5px;
+  text-align:left;
+  width:100%;
+  color:var(--ink);
+  line-height:1.45;
+}
+.option:hover:not(.disabled){
+  border-color:var(--accent);
+  background:#F8FBFD;
+}
+.option-letter{
+  flex-shrink:0;
+  width:24px;height:24px;
+  border-radius:50%;
+  background:#F1F5F9;
+  color:var(--ink-soft);
+  font-weight:700;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s;
+}
+.option:hover:not(.disabled) .option-letter{
+  background:var(--accent);color:#fff;
+}
+.option.selected{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.option.selected .option-letter{background:var(--accent);color:#fff}
+.option.correct{
+  border-color:var(--ok);
+  background:var(--ok-soft);
+}
+.option.correct .option-letter{background:var(--ok);color:#fff}
+.option.incorrect{
+  border-color:var(--bad);
+  background:var(--bad-soft);
+}
+.option.incorrect .option-letter{background:var(--bad);color:#fff}
+.option.disabled{cursor:default}
+.option.dim{opacity:.55}
+
+/* Feedback */
+.feedback{
+  margin-top:16px;
+  padding:14px 16px;
+  border-radius:10px;
+  font-size:14px;
+  line-height:1.55;
+  animation:slideIn .25s ease;
+}
+@keyframes slideIn{
+  from{opacity:0;transform:translateY(-4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.feedback.ok{
+  background:var(--ok-soft);
+  border:1px solid #A7F3D0;
+  color:#064E3B;
+}
+.feedback.bad{
+  background:var(--bad-soft);
+  border:1px solid #FECACA;
+  color:#7F1D1D;
+}
+.feedback-title{
+  font-weight:700;
+  font-size:13px;
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+/* Controls */
+.controls{
+  display:flex;
+  gap:10px;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:18px;
+  flex-wrap:wrap;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:11px 22px;
+  border:none;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:600;
+  font-family:inherit;
+  cursor:pointer;
+  transition:all .15s;
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--ink-mute);cursor:not-allowed;transform:none}
+.btn-ghost{
+  background:transparent;
+  color:var(--ink-soft);
+  border:1px solid var(--border);
+}
+.btn-ghost:hover{background:#F1F5F9;color:var(--ink)}
+
+/* Result screen */
+.result-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:30px 26px;
+  text-align:center;
+  box-shadow:var(--shadow-lg);
+}
+.score-big{
+  font-size:64px;
+  font-weight:700;
+  letter-spacing:-.02em;
+  line-height:1;
+  margin:10px 0;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--u4) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.score-label{font-size:13px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.score-msg{font-size:16px;color:var(--ink);margin:14px 0 22px;font-weight:500}
+.score-breakdown{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:22px 0;
+}
+.breakdown-card{
+  background:#F8FAFC;
+  border:1px solid var(--border);
+  padding:16px;
+  border-radius:10px;
+  text-align:left;
+}
+.breakdown-card .unit{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.breakdown-card.u3 .unit{color:var(--u3)}
+.breakdown-card.u4 .unit{color:var(--u4)}
+.breakdown-card .score{
+  font-size:24px;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.breakdown-card .detail{font-size:12px;color:var(--ink-soft)}
+
+.review-list{
+  text-align:left;
+  margin-top:24px;
+  padding-top:22px;
+  border-top:1px solid var(--border);
+}
+.review-list h3{
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  margin-bottom:14px;
+}
+.review-item{
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+.review-item:last-child{border-bottom:none}
+.review-item .ri-q{font-weight:600;margin-bottom:4px;color:var(--ink)}
+.review-item .ri-wrong{color:var(--bad);font-size:13px;margin-bottom:3px}
+.review-item .ri-right{color:var(--ok);font-size:13px}
+.review-item .ri-wrong::before{content:"✗ Elegiste: ";font-weight:600}
+.review-item .ri-right::before{content:"✓ Correcta: ";font-weight:600}
+
+/* Footer */
+.footer{
+  margin-top:30px;
+  text-align:center;
+  font-size:12px;
+  color:var(--ink-mute);
+}
+
+@media (max-width:600px){
+  .wrap{padding:16px 14px 50px}
+  .hero{padding:22px 18px}
+  .hero h1{font-size:22px}
+  .card{padding:20px 18px}
+  .q-title{font-size:15px}
+  .score-big{font-size:52px}
+  .score-breakdown{grid-template-columns:1fr}
+  .controls{flex-direction:column-reverse;align-items:stretch}
+  .controls .btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">UTN BA · Tecnicatura en Comercio Electrónico y Marketing Digital</div>
+  <h1>Simulador Parcial 2 · Estadística Aplicada a los Negocios</h1>
+  <p>Repaso de cierre + práctica con preguntas estilo banco. Unidades 3 (Pruebas de Hipótesis) y 4 (ANOVA, Chi-Cuadrado, Correlación y Regresión).</p>
+</header>
+
+<details class="review">
+  <summary>📘 Repaso rápido · Conceptos clave U3 + U4</summary>
+  <div class="review-body">
+
+    <h3>Unidad 3 · Pruebas de Hipótesis (una muestra)</h3>
+    <p><strong>Parámetro vs estadístico:</strong> las hipótesis se formulan sobre <strong>parámetros poblacionales</strong> (μ, σ, p), no sobre lo que medimos en la muestra (x̄, s, p̂).</p>
+    <p><strong>H₀ vs H₁:</strong> H₀ es el "statu quo" o "no hay efecto". H₁ es lo que queremos probar.</p>
+    <ul>
+      <li><strong>Bilateral:</strong> palabra clave "diferente". H₁: μ ≠ μ₀</li>
+      <li><strong>Unilateral derecha:</strong> "aumenta / mayor / supera". H₁: μ &gt; μ₀</li>
+      <li><strong>Unilateral izquierda:</strong> "disminuye / menor / reduce". H₁: μ &lt; μ₀</li>
+      <li>H₀ siempre incluye la igualdad (=, ≥, ≤)</li>
+    </ul>
+    <p><strong>Errores:</strong></p>
+    <ul>
+      <li><strong>Error Tipo I (α):</strong> rechazar H₀ siendo verdadera (falso positivo). "Creer que hay efecto cuando no lo hay".</li>
+      <li><strong>Error Tipo II (β):</strong> no rechazar H₀ siendo falsa (falso negativo). "No detectar un efecto que sí existe" → costo de oportunidad.</li>
+    </ul>
+    <p><strong>Z vs t:</strong></p>
+    <ul>
+      <li><strong>Z:</strong> cuando σ poblacional es conocida (raro en marketing).</li>
+      <li><strong>t:</strong> cuando σ es desconocida y se estima con s muestral (el caso típico). gl = n − 1.</li>
+    </ul>
+    <p><strong>Regla del p-valor:</strong></p>
+    <div class="callout">
+      Si <span class="formula">p-valor &lt; α</span> → <strong>Rechazo H₀</strong> (hay evidencia significativa).<br>
+      Si <span class="formula">p-valor ≥ α</span> → <strong>No rechazo H₀</strong> (no hay evidencia suficiente).
+    </div>
+
+    <h3>Unidad 4 · Comparaciones avanzadas y modelado</h3>
+    <p><strong>1. Diferencia de medias (dos muestras):</strong></p>
+    <ul>
+      <li><strong>Independientes:</strong> grupos distintos (A/B con usuarios diferentes). Prueba t de Welch si σ desconocidas.</li>
+      <li><strong>Apareadas:</strong> mismos sujetos en dos momentos (antes/después) o pares emparejados. Se analizan las diferencias dᵢ.</li>
+      <li>Estadístico t (independientes): <span class="formula">t = (x̄₁ − x̄₂) / √(s₁²/n₁ + s₂²/n₂)</span></li>
+    </ul>
+    <p><strong>2. ANOVA de un factor (≥ 3 grupos):</strong></p>
+    <ul>
+      <li>Evita la inflación del Error Tipo I que ocurre al hacer múltiples pruebas t.</li>
+      <li>H₀: μ₁ = μ₂ = … = μₖ &nbsp;&nbsp; H₁: al menos una media es diferente.</li>
+      <li>Estadístico <strong>F = MSB / MSW</strong> (variabilidad entre grupos ÷ dentro de grupos).</li>
+      <li>Supuestos: independencia, normalidad, homocedasticidad.</li>
+      <li>Si rechazás H₀ → aplicar <strong>post-hoc</strong> (Tukey, Bonferroni) para identificar qué pares difieren.</li>
+    </ul>
+    <p><strong>3. Chi-Cuadrado (χ²):</strong></p>
+    <ul>
+      <li><strong>Bondad de ajuste:</strong> 1 variable categórica vs distribución esperada.</li>
+      <li><strong>Independencia:</strong> 2 variables categóricas (tabla de contingencia).</li>
+      <li>Estadístico: <span class="formula">χ² = Σ (O − E)² / E</span></li>
+      <li><strong>Supuesto crítico:</strong> frecuencias esperadas ≥ 5 (Cochran). Si no se cumple, agrupar categorías o usar Fisher exacto.</li>
+    </ul>
+    <p><strong>4. Correlación de Pearson (r):</strong></p>
+    <ul>
+      <li>Rango: −1 a +1. Mide fuerza y dirección de relación <strong>lineal</strong> entre dos variables cuantitativas.</li>
+      <li>Siempre acompañar con <strong>diagrama de dispersión</strong> (Pearson no detecta no-linealidades).</li>
+      <li><strong>Correlación NO implica causalidad</strong> (variable oculta, causalidad inversa, espuria).</li>
+    </ul>
+    <p><strong>5. Regresión lineal simple:</strong></p>
+    <ul>
+      <li>Modelo: <span class="formula">Ŷ = b₀ + b₁·X</span></li>
+      <li><strong>Pendiente b₁:</strong> cambio promedio en Y por cada unidad de X. Es el coeficiente accionable.</li>
+      <li><strong>Intercepto b₀:</strong> valor predicho de Y cuando X=0 (cuidado con extrapolación).</li>
+      <li><strong>R²:</strong> proporción de varianza de Y explicada por X (entre 0 y 1). En regresión simple, R² = r².</li>
+    </ul>
+  </div>
+</details>
+
+<div class="section-title">Simulador · 20 preguntas</div>
+
+<div class="progress-bar-wrap" id="progressWrap" style="display:none">
+  <div class="progress-meta">
+    <span id="progressLabel">Pregunta 1 de 20</span>
+    <span id="progressScore">0 correctas</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<div id="app"></div>
+
+<div class="footer">
+  Prof. Natanael Soberón · UTN Buenos Aires · Estadística Aplicada a los Negocios
+</div>
+
+</div>
+
+<script>
+// ============================================================
+//  BANCO DE PREGUNTAS · Parcial 2 · Estadística Aplicada
+//  120 preguntas (60 U3 + 60 U4). Cada intento toma 20 al azar.
+// ============================================================
+const BANK = [
+
+  // ╔══════════════════════════════════════════════════════╗
+  // ║  UNIDAD 3 · Pruebas de hipótesis (una muestra)        ║
+  // ╚══════════════════════════════════════════════════════╝
+
+  // ---- Bloque: parámetro vs estadístico ----
+  {
+    id:"u3-001", unit:"U3", title:"Optimización de Landing Pages",
+    context:"Un e-commerce de indumentaria deportiva quiere evaluar si una nueva versión de su landing page incrementa el tiempo promedio de permanencia respecto al actual, que es de 95 segundos.",
+    prompt:"¿Sobre qué parámetro se formulan las hipótesis en este escenario?",
+    options:[
+      {text:"El tiempo promedio de permanencia muestral (x̄)",correct:false,fb:"Las hipótesis se formulan sobre parámetros poblacionales (μ), no sobre el valor calculado en la muestra. El x̄ es el estimador, no el parámetro."},
+      {text:"El tiempo promedio de permanencia poblacional con la nueva landing (μ)",correct:true,fb:"¡Exacto! μ es el parámetro que queremos inferir: el tiempo promedio de TODOS los usuarios que verían la nueva landing. Sobre ese parámetro formulamos H₀ y H₁."},
+      {text:"El valor de referencia de 95 segundos",correct:false,fb:"95 segundos es el valor hipotético contra el que comparamos (μ₀), no el parámetro sobre el cual hacemos inferencia. El parámetro es la media poblacional desconocida."},
+      {text:"La desviación estándar del tiempo de permanencia",correct:false,fb:"σ es un parámetro pero no es el que se está cuestionando acá. La hipótesis se trata sobre la media, no sobre la dispersión."}
+    ]
+  },
+  {
+    id:"u3-002", unit:"U3", title:"Proporción de Carritos Abandonados",
+    context:"Una tienda online sabe que históricamente el 70% de los carritos se abandonan. Implementa un recordatorio por email y quiere ver si la proporción de abandono cambió.",
+    prompt:"¿Cuál es el parámetro de interés y qué símbolo lo representa?",
+    options:[
+      {text:"La proporción poblacional de abandono, p",correct:true,fb:"¡Correcto! Cuando la variable es categórica (abandona / no abandona) y nos interesa una fracción, el parámetro es la proporción poblacional p. El 70% es el valor de referencia p₀."},
+      {text:"La proporción muestral de abandono, p̂",correct:false,fb:"p̂ es el estimador que calcularemos con los datos de la muestra. El parámetro sobre el que hipotetizamos es p (poblacional), no p̂."},
+      {text:"La media poblacional, μ",correct:false,fb:"μ se usa para variables cuantitativas (tiempos, montos). Acá la variable es categórica (abandona o no), por lo que el parámetro es una proporción p."},
+      {text:"El total de carritos abandonados",correct:false,fb:"Un conteo total no es el parámetro de inferencia. Lo que se infiere es la proporción poblacional p, una fracción entre 0 y 1."}
+    ]
+  },
+  {
+    id:"u3-003", unit:"U3", title:"Ticket Promedio",
+    context:"Un gerente afirma que el ticket promedio de su e-commerce supera los $8.500. Toma una muestra para ponerlo a prueba.",
+    prompt:"En la afirmación del gerente, ¿qué representa el valor $8.500?",
+    options:[
+      {text:"El parámetro poblacional μ",correct:false,fb:"$8.500 no es el parámetro desconocido: es el valor específico contra el cual se compara. El parámetro μ es el ticket promedio real (desconocido) de toda la población."},
+      {text:"El valor hipotético de referencia, μ₀",correct:true,fb:"¡Exacto! $8.500 es μ₀: el valor de referencia que aparece en H₀ y H₁. El parámetro μ (el verdadero ticket promedio poblacional) es lo que queremos inferir y es desconocido."},
+      {text:"La media muestral x̄",correct:false,fb:"x̄ es lo que se obtendrá al calcular el promedio de la muestra. $8.500 es un valor fijo de referencia que da el gerente, no un cálculo muestral."},
+      {text:"El estadístico de prueba",correct:false,fb:"El estadístico de prueba (t o Z) se calcula a partir de los datos. $8.500 es solo el valor de comparación μ₀."}
+    ]
+  },
+  {
+    id:"u3-004", unit:"U3", title:"Estimador Puntual",
+    context:"En un estudio de satisfacción, una muestra de 200 clientes arroja una calificación promedio de 4.3 sobre 5.",
+    prompt:"¿Qué es el 4.3 en términos estadísticos?",
+    options:[
+      {text:"Un parámetro poblacional",correct:false,fb:"Un parámetro describe a TODA la población y es desconocido. El 4.3 proviene de una muestra, así que es un estadístico, no un parámetro."},
+      {text:"Un estadístico muestral (estimador puntual de μ)",correct:true,fb:"¡Correcto! El 4.3 es x̄, calculado a partir de la muestra. Funciona como estimador puntual del parámetro poblacional μ (la satisfacción promedio real de todos los clientes)."},
+      {text:"El nivel de significancia",correct:false,fb:"El nivel de significancia (α) es un umbral de riesgo predefinido, como 0.05. El 4.3 es un promedio calculado con datos."},
+      {text:"La hipótesis nula",correct:false,fb:"La hipótesis nula es una afirmación sobre el parámetro. El 4.3 es un dato resumen de la muestra, no una hipótesis."}
+    ]
+  },
+  // ---- Bloque: formulación de H0/H1 y dirección ----
+  {
+    id:"u3-005", unit:"U3", title:"Tasa de Conversión en Email Marketing",
+    context:"Un equipo de marketing rediseñó la plantilla del newsletter y quiere probar si la tasa de apertura aumenta respecto al 22% histórico.",
+    prompt:"¿Cuál es la Hipótesis Alternativa (H₁) correcta?",
+    options:[
+      {text:"H₁: p ≠ 0.22",correct:false,fb:"Esta H₁ es bilateral (se usaría si solo nos interesara saber si es diferente). El enunciado es direccional: queremos probar específicamente un aumento."},
+      {text:"H₁: p = 0.22",correct:false,fb:"Una H₁ nunca incluye la igualdad. La igualdad va siempre en H₀, que representa el 'no efecto' o statu quo."},
+      {text:"H₁: p > 0.22",correct:true,fb:"¡Perfecto! La palabra clave 'aumenta' indica una dirección específica (mayor que). Por eso H₁ es unilateral derecha y H₀ sería p ≤ 0.22."},
+      {text:"H₁: p < 0.22",correct:false,fb:"Esto se usaría si quisiéramos probar una disminución. Acá el equipo busca evidencia de aumento. Revisá la palabra clave del enunciado."}
+    ]
+  },
+  {
+    id:"u3-006", unit:"U3", title:"Velocidad de Carga Web",
+    context:"Un sitio de e-commerce migró su hosting y quiere verificar si el tiempo promedio de carga cambió respecto a los 2.8 segundos previos. No tienen sospecha sobre la dirección del cambio.",
+    prompt:"¿Qué tipo de prueba se debe realizar?",
+    options:[
+      {text:"Prueba unilateral derecha",correct:false,fb:"La prueba unilateral derecha se usa cuando esperamos un aumento específico. Acá no se anticipa dirección, solo si hubo cambio en cualquier sentido."},
+      {text:"Prueba unilateral izquierda",correct:false,fb:"La unilateral izquierda probaría específicamente una disminución. El enunciado no especifica dirección esperada."},
+      {text:"Prueba bilateral (de dos colas)",correct:true,fb:"¡Correcto! Cuando no hay dirección anticipada y solo queremos saber si 'cambió' o es 'diferente', usamos una prueba bilateral que reparte α/2 en cada cola."},
+      {text:"No corresponde prueba de hipótesis, solo descripción",correct:false,fb:"Sí corresponde una prueba de hipótesis: tenemos un valor de referencia (2.8 seg) y queremos inferir si el parámetro poblacional cambió."}
+    ]
+  },
+  {
+    id:"u3-007", unit:"U3", title:"Cambio de Pasarela de Pago",
+    context:"Un e-commerce cambió de pasarela de pago. La tasa histórica de checkout completado era del 68%. La empresa teme que la nueva pasarela reduzca esta tasa y quiere actuar rápido si eso ocurre.",
+    prompt:"¿Cuál es la Hipótesis Nula (H₀) correcta?",
+    options:[
+      {text:"H₀: p < 0.68",correct:false,fb:"Formulaste la H₁ (lo que la empresa teme). H₀ debe ser el complemento: incluye igualdad y la dirección opuesta a lo que se quiere probar."},
+      {text:"H₀: p = 0.68",correct:false,fb:"Casi. En una prueba unilateral, H₀ no es solo la igualdad: debe cubrir todos los escenarios que no apoyan H₁. Si H₁ es 'menor', H₀ incluye 'igual o mayor'."},
+      {text:"H₀: p ≥ 0.68",correct:true,fb:"¡Excelente! H₁ es p < 0.68 (la reducción que se teme). H₀ es el complemento: la tasa se mantiene igual o incluso mejora. La igualdad siempre va en H₀."},
+      {text:"H₀: p ≠ 0.68",correct:false,fb:"Esa es una H₁ bilateral. Acá el escenario es direccional (se teme una reducción específica), por lo que H₀ debe ser direccional también."}
+    ]
+  },
+  {
+    id:"u3-008", unit:"U3", title:"Tiempo de Respuesta de Soporte",
+    context:"Un servicio de atención al cliente promete que el tiempo medio de primera respuesta es de a lo sumo 4 horas. Un auditor quiere comprobar si en realidad ese tiempo es mayor.",
+    prompt:"¿Cómo se formulan las hipótesis?",
+    options:[
+      {text:"H₀: μ ≤ 4 ; H₁: μ > 4",correct:true,fb:"¡Correcto! El auditor sospecha que el tiempo real es MAYOR (peor que lo prometido). Eso va en H₁ (μ > 4). H₀ recoge la promesa: el tiempo es de a lo sumo 4 horas (μ ≤ 4)."},
+      {text:"H₀: μ ≥ 4 ; H₁: μ < 4",correct:false,fb:"Esto probaría que el tiempo es MENOR a 4. Pero el auditor sospecha lo contrario: que es mayor (peor servicio). Invertiste la dirección."},
+      {text:"H₀: μ = 4 ; H₁: μ ≠ 4",correct:false,fb:"Sería bilateral, pero el auditor tiene una dirección clara: sospecha que el tiempo es mayor. Conviene una prueba unilateral derecha."},
+      {text:"H₀: μ > 4 ; H₁: μ ≤ 4",correct:false,fb:"H₀ nunca puede ser una desigualdad estricta sin igualdad: la igualdad siempre vive en H₀. Además invertiste la lógica del auditor."}
+    ]
+  },
+  {
+    id:"u3-009", unit:"U3", title:"Efectividad de un Descuento",
+    context:"Un analista quiere demostrar que aplicar un cupón del 15% aumenta el gasto promedio por compra, que sin cupón es de $5.000.",
+    prompt:"¿Qué afirmación va en la hipótesis nula?",
+    options:[
+      {text:"Que el cupón aumenta el gasto promedio",correct:false,fb:"Eso es lo que el analista QUIERE probar: va en H₁, no en H₀. La nula siempre representa el escenario de 'no efecto'."},
+      {text:"Que el cupón no aumenta el gasto promedio (μ ≤ 5.000)",correct:true,fb:"¡Exacto! H₀ es siempre el statu quo o 'no hay efecto': el gasto no aumenta (μ ≤ 5.000). La carga de la prueba recae en demostrar H₁ (μ > 5.000)."},
+      {text:"Que el gasto promedio es exactamente $5.000 y nada más",correct:false,fb:"Casi, pero en una prueba unilateral derecha H₀ abarca 'igual o menor' (μ ≤ 5.000), no solo la igualdad exacta."},
+      {text:"Que la muestra tiene gasto promedio mayor a $5.000",correct:false,fb:"Las hipótesis se formulan sobre el parámetro poblacional μ, no sobre lo observado en la muestra."}
+    ]
+  },
+  {
+    id:"u3-010", unit:"U3", title:"Palabra Clave del Enunciado",
+    context:"Un enunciado dice: 'Se desea evaluar si el nuevo proceso de onboarding REDUCE el tiempo promedio hasta la primera compra'.",
+    prompt:"¿Qué tipo de hipótesis alternativa corresponde?",
+    options:[
+      {text:"Bilateral (μ ≠ μ₀)",correct:false,fb:"'Reduce' es una palabra direccional. La prueba bilateral se reserva para 'cambió' o 'es diferente', sin dirección específica."},
+      {text:"Unilateral derecha (μ > μ₀)",correct:false,fb:"'Reduce' indica disminución, no aumento. La unilateral derecha sería para 'aumenta' o 'supera'."},
+      {text:"Unilateral izquierda (μ < μ₀)",correct:true,fb:"¡Correcto! 'Reduce / disminuye / menor' → la dirección es hacia abajo, así que H₁: μ < μ₀ (unilateral izquierda). Toda la región de rechazo queda en la cola izquierda."},
+      {text:"No se puede determinar sin los datos",correct:false,fb:"La dirección de la hipótesis se determina por las palabras del enunciado, no por los datos. 'Reduce' ya define la dirección: izquierda."}
+    ]
+  },
+  {
+    id:"u3-011", unit:"U3", title:"Complemento de la Hipótesis",
+    context:"En una prueba sobre la tasa de clics, se plantea H₁: p > 0.05.",
+    prompt:"¿Cuál es la H₀ correspondiente?",
+    options:[
+      {text:"H₀: p ≤ 0.05",correct:true,fb:"¡Correcto! H₀ es el complemento exacto de H₁ e incluye la igualdad. Si H₁ es p > 0.05, entonces H₀ cubre 'igual o menor': p ≤ 0.05."},
+      {text:"H₀: p < 0.05",correct:false,fb:"Te falta la igualdad. H₀ siempre incluye el signo '=', por lo que sería p ≤ 0.05 (igual o menor), no estrictamente menor."},
+      {text:"H₀: p = 0.05 únicamente",correct:false,fb:"En pruebas unilaterales H₀ abarca toda la dirección opuesta a H₁, no solo la igualdad puntual. Lo correcto: p ≤ 0.05."},
+      {text:"H₀: p ≥ 0.05",correct:false,fb:"Esa sería la nula si H₁ fuera p < 0.05. Como H₁ apunta hacia arriba (p > 0.05), H₀ debe apuntar hacia abajo: p ≤ 0.05."}
+    ]
+  },
+  {
+    id:"u3-012", unit:"U3", title:"Hipótesis sobre Proporción",
+    context:"Una empresa cree que MENOS del 40% de sus usuarios usan la app en móvil (el resto en desktop). Quiere probarlo estadísticamente.",
+    prompt:"¿Cuál es el par de hipótesis correcto?",
+    options:[
+      {text:"H₀: p ≥ 0.40 ; H₁: p < 0.40",correct:true,fb:"¡Correcto! 'Menos del 40%' → H₁: p < 0.40. La nula es el complemento con igualdad: p ≥ 0.40. Toda la región de rechazo queda en la cola izquierda."},
+      {text:"H₀: p ≤ 0.40 ; H₁: p > 0.40",correct:false,fb:"Invertiste la dirección. 'Menos del 40%' apunta hacia abajo (p < 0.40), no hacia arriba."},
+      {text:"H₀: p = 0.40 ; H₁: p ≠ 0.40",correct:false,fb:"Sería bilateral, pero el enunciado tiene una dirección clara ('menos del 40%'). Corresponde unilateral izquierda."},
+      {text:"H₀: p < 0.40 ; H₁: p ≥ 0.40",correct:false,fb:"H₀ no puede ser una desigualdad estricta: la igualdad siempre va en H₀. Además invertiste la hipótesis de interés."}
+    ]
+  },
+  // ---- Bloque: errores tipo I y II ----
+  {
+    id:"u3-013", unit:"U3", title:"Test A/B de Botón CTA",
+    context:"Un equipo de UX prueba dos colores de botón CTA. Si encuentra diferencia significativa, descarta el botón perdedor. Si no, mantiene ambos rotando.",
+    prompt:"¿Cuál es la consecuencia de cometer un Error Tipo I en este caso?",
+    options:[
+      {text:"Mantener ambos botones cuando uno era realmente mejor",correct:false,fb:"Esa es la consecuencia de un Error Tipo II (falso negativo): no detectar un efecto que sí existe. El Error Tipo I es lo contrario."},
+      {text:"Descartar un botón creyendo que el otro es mejor, cuando en realidad rinden igual",correct:true,fb:"¡Correcto! Error Tipo I = rechazar H₀ siendo verdadera (falso positivo). En el negocio: tomar una decisión basada en una diferencia que no existe realmente."},
+      {text:"Necesitar más presupuesto para repetir la prueba",correct:false,fb:"Eso es una acción posterior, no la consecuencia directa del error. El Error Tipo I se refiere a la conclusión estadística incorrecta."},
+      {text:"Que los usuarios se confundan con el cambio",correct:false,fb:"Eso es un efecto de usabilidad, no la consecuencia estadística directa del Error Tipo I."}
+    ]
+  },
+  {
+    id:"u3-014", unit:"U3", title:"Nivel de Significancia",
+    context:"Un equipo de marketing define α = 0.05 para todas sus pruebas A/B.",
+    prompt:"¿Qué representa concretamente este nivel α?",
+    options:[
+      {text:"La probabilidad de que H₀ sea verdadera",correct:false,fb:"Frecuente confusión. α no es la probabilidad de que H₀ sea verdadera. α es la probabilidad de RECHAZAR H₀ siendo verdadera."},
+      {text:"La probabilidad de cometer un Error Tipo I",correct:true,fb:"¡Perfecto! α = P(rechazar H₀ | H₀ verdadera) = probabilidad de falso positivo. Fijar α en 0.05 significa aceptar un 5% de riesgo de afirmar que hay efecto cuando no lo hay."},
+      {text:"La probabilidad de cometer un Error Tipo II",correct:false,fb:"Esa probabilidad se denota β, no α. α y β son riesgos diferentes y, manteniendo n constante, se mueven en direcciones opuestas."},
+      {text:"La precisión del estadístico de prueba",correct:false,fb:"α no es una medida de precisión sino un nivel de riesgo aceptable predefinido por el analista antes de hacer la prueba."}
+    ]
+  },
+  {
+    id:"u3-015", unit:"U3", title:"Detección de Fraude",
+    context:"Un sistema antifraude marca transacciones como sospechosas. H₀: la transacción es legítima. Bloquear una transacción legítima genera quejas de clientes.",
+    prompt:"Bloquear una transacción que en realidad era legítima corresponde a...",
+    options:[
+      {text:"Error Tipo I",correct:true,fb:"¡Correcto! H₀ dice 'es legítima'. Bloquearla = rechazar H₀. Si en realidad era legítima, rechazamos una H₀ verdadera → Error Tipo I (falso positivo)."},
+      {text:"Error Tipo II",correct:false,fb:"El Error Tipo II sería NO bloquear una transacción que sí era fraudulenta (no rechazar H₀ siendo falsa). Acá ocurre lo opuesto."},
+      {text:"Una decisión correcta",correct:false,fb:"No es correcta: se penalizó a un cliente legítimo. Rechazar una H₀ verdadera es precisamente el Error Tipo I."},
+      {text:"Un error de medición",correct:false,fb:"No es un error de medición sino un error de decisión estadística: rechazar H₀ cuando era verdadera (Tipo I)."}
+    ]
+  },
+  {
+    id:"u3-016", unit:"U3", title:"Filtro de Spam",
+    context:"Un filtro clasifica correos. H₀: el correo es legítimo (inbox). Un Error Tipo II aquí significa dejar pasar spam a la bandeja de entrada.",
+    prompt:"¿Qué es, en este filtro, un Error Tipo II?",
+    options:[
+      {text:"Enviar un correo legítimo a spam",correct:false,fb:"Eso es rechazar H₀ (legítimo) siendo verdadera → Error Tipo I. El Tipo II es lo contrario."},
+      {text:"Dejar pasar spam como si fuera legítimo",correct:true,fb:"¡Correcto! H₀ es 'legítimo'. El spam real corresponde a H₀ falsa. No detectarlo (no rechazar H₀ siendo falsa) = Error Tipo II, falso negativo."},
+      {text:"Bloquear todos los correos",correct:false,fb:"Eso no describe un tipo de error específico, sino un comportamiento extremo del filtro."},
+      {text:"Clasificar correctamente un correo legítimo",correct:false,fb:"Esa es una decisión correcta, no un error. El Error Tipo II es no detectar el spam real."}
+    ]
+  },
+  {
+    id:"u3-017", unit:"U3", title:"Costo de Oportunidad",
+    context:"Una empresa testea una mejora en su checkout. La mejora SÍ funciona, pero la prueba concluye 'no hay diferencia significativa' y la descartan.",
+    prompt:"¿Qué error se cometió y cuál es su costo?",
+    options:[
+      {text:"Error Tipo I: implementaron algo que no servía",correct:false,fb:"No implementaron nada: descartaron una mejora real. Eso es no rechazar H₀ siendo falsa → Error Tipo II, no Tipo I."},
+      {text:"Error Tipo II: descartaron una mejora que sí funcionaba (costo de oportunidad)",correct:true,fb:"¡Exacto! La mejora era real (H₀ falsa) pero no la detectaron (no rechazaron H₀). Eso es Error Tipo II. El costo: perdieron la ganancia que la mejora habría traído."},
+      {text:"Ningún error: la decisión fue conservadora",correct:false,fb:"Sí hubo error: rechazaron una mejora real. Ser conservador no evita que un falso negativo (Tipo II) tenga costo real de oportunidad."},
+      {text:"Error de muestreo aleatorio",correct:false,fb:"No es un error de muestreo: es un error de decisión. No detectar un efecto real es, por definición, el Error Tipo II."}
+    ]
+  },
+  {
+    id:"u3-018", unit:"U3", title:"Relación entre α y β",
+    context:"Un analista decide bajar su nivel de significancia de α = 0.05 a α = 0.01 para ser más estricto, manteniendo el mismo tamaño de muestra.",
+    prompt:"¿Qué efecto tiene esto sobre el riesgo de Error Tipo II (β)?",
+    options:[
+      {text:"β disminuye también",correct:false,fb:"Al revés. Con n constante, α y β se mueven en direcciones opuestas. Si bajás α, te volvés más exigente para rechazar H₀ y β aumenta."},
+      {text:"β aumenta",correct:true,fb:"¡Correcto! Con n fijo hay un trade-off: reducir α (ser más estricto) hace más difícil rechazar H₀, lo que aumenta β (más falsos negativos) y reduce la potencia."},
+      {text:"β no cambia",correct:false,fb:"β sí cambia: con n constante, mover α siempre afecta a β en sentido contrario. Solo aumentando n se pueden reducir ambos a la vez."},
+      {text:"β se vuelve igual a α",correct:false,fb:"α y β son riesgos independientes y rara vez son iguales. Bajar α con n fijo hace que β suba, no que se igualen."}
+    ]
+  },
+  {
+    id:"u3-019", unit:"U3", title:"Identificar el Error más Costoso",
+    context:"Una farmacéutica online prueba si un nuevo proveedor de medicamentos cumple los estándares. H₀: el lote es seguro. Distribuir un lote inseguro tiene consecuencias graves para la salud.",
+    prompt:"¿Qué error es el más costoso evitar en este contexto y a qué corresponde?",
+    options:[
+      {text:"El Error Tipo I: rechazar un lote que era seguro",correct:false,fb:"Rechazar un lote seguro genera desperdicio económico, pero no pone en riesgo la salud. El error grave acá es el opuesto."},
+      {text:"El Error Tipo II: distribuir un lote inseguro como si fuera seguro",correct:true,fb:"¡Correcto! H₀ es 'el lote es seguro'. Si el lote era inseguro (H₀ falsa) y no lo detectamos (no rechazamos H₀), es Error Tipo II — y acá tiene consecuencias graves para la salud."},
+      {text:"Ambos errores cuestan exactamente lo mismo",correct:false,fb:"No: en salud, dejar pasar un lote inseguro (Tipo II) es mucho más grave que descartar uno seguro (Tipo I). El contexto define qué error pesa más."},
+      {text:"Ninguno importa si α = 0.05",correct:false,fb:"El valor de α controla solo el riesgo Tipo I. El error grave acá es el Tipo II, que depende de la potencia, no solo de α."}
+    ]
+  },
+  // ---- Bloque: p-valor ----
+  {
+    id:"u3-020", unit:"U3", title:"Interpretación de p-valor",
+    context:"Una agencia obtiene un p-valor de 0.001 en una prueba A/B de copy publicitario.",
+    prompt:"¿Cuál es la interpretación correcta del p-valor?",
+    options:[
+      {text:"Hay un 0.1% de probabilidad de que el nuevo copy sea mejor",correct:false,fb:"Mala interpretación frecuente. El p-valor NO es la probabilidad de que una hipótesis sea cierta. Es una probabilidad condicional muy específica."},
+      {text:"Hay un 0.1% de probabilidad de que H₀ sea verdadera",correct:false,fb:"Otra interpretación incorrecta. El p-valor no asigna probabilidad a las hipótesis. Las hipótesis son afirmaciones sobre la población, no eventos aleatorios."},
+      {text:"Probabilidad de observar estos datos (o más extremos) asumiendo que H₀ es verdadera",correct:true,fb:"¡Correcto! El p-valor es P(datos observados o más extremos | H₀ verdadera). Un p-valor pequeño significa que los datos son muy poco probables bajo H₀, por eso nos inclinamos a rechazarla."},
+      {text:"99.9% de probabilidad de que la diferencia sea real",correct:false,fb:"No. El p-valor no se traduce directamente en probabilidad de que la diferencia exista. Solo indica qué tan inusuales son los datos asumiendo H₀."}
+    ]
+  },
+  {
+    id:"u3-021", unit:"U3", title:"Regla de Decisión",
+    context:"Un test arroja un p-valor de 0.03. El nivel de significancia fijado fue α = 0.05.",
+    prompt:"¿Qué decisión corresponde?",
+    options:[
+      {text:"Rechazar H₀, porque p-valor < α",correct:true,fb:"¡Correcto! La regla es simple: si p-valor < α, se rechaza H₀. Como 0.03 < 0.05, hay evidencia significativa contra H₀."},
+      {text:"No rechazar H₀, porque p-valor < α",correct:false,fb:"La lógica está invertida. Cuando p < α se RECHAZA H₀ (los datos son lo bastante improbables bajo H₀ como para dudar de ella)."},
+      {text:"Rechazar H₀, porque p-valor > α",correct:false,fb:"0.03 no es mayor que 0.05. Además, se rechaza cuando p < α, no cuando p > α."},
+      {text:"No se puede decidir sin el estadístico de prueba",correct:false,fb:"Con el p-valor y α alcanza para decidir. El estadístico es otra vía equivalente, pero no es necesaria si ya tenés el p-valor."}
+    ]
+  },
+  {
+    id:"u3-022", unit:"U3", title:"p-valor Alto",
+    context:"Una prueba sobre el efecto de un banner arroja p-valor = 0.42, con α = 0.05.",
+    prompt:"¿Qué se concluye?",
+    options:[
+      {text:"Se demuestra que el banner no tiene ningún efecto",correct:false,fb:"Cuidado: no rechazar H₀ no prueba que H₀ sea cierta. La ausencia de evidencia no es evidencia de ausencia."},
+      {text:"No hay evidencia suficiente para rechazar H₀",correct:true,fb:"¡Correcto! Como p (0.42) > α (0.05), no rechazamos H₀. Eso significa que los datos no aportan evidencia suficiente del efecto, NO que el efecto sea cero."},
+      {text:"Se rechaza H₀ con alta confianza",correct:false,fb:"Un p-valor alto (0.42) indica datos compatibles con H₀. No se rechaza. Se rechaza solo cuando p < α."},
+      {text:"El experimento está mal diseñado",correct:false,fb:"Un p-valor alto no implica un mal diseño. Simplemente no se halló evidencia del efecto con los datos disponibles."}
+    ]
+  },
+  {
+    id:"u3-023", unit:"U3", title:"No Rechazar ≠ Probar H₀",
+    context:"Tras una prueba, un estudiante escribe: 'Como p > α, queda demostrado que las dos versiones son idénticas'.",
+    prompt:"¿Por qué esta afirmación es incorrecta?",
+    options:[
+      {text:"Porque debería haber dicho 'casi idénticas'",correct:false,fb:"El problema no es de grado. Es conceptual: no rechazar H₀ nunca 'demuestra' H₀, sin importar cuán cerca estén."},
+      {text:"Porque no rechazar H₀ no prueba que H₀ sea verdadera; solo indica falta de evidencia",correct:true,fb:"¡Exacto! 'No rechazar' significa que los datos no fueron suficientes para detectar una diferencia, no que la diferencia sea cero. Podría existir un efecto real no detectado (Error Tipo II)."},
+      {text:"Porque el p-valor siempre prueba H₁",correct:false,fb:"El p-valor no 'prueba' ninguna hipótesis. Solo mide compatibilidad de los datos con H₀. El error del estudiante es afirmar que se 'demostró' H₀."},
+      {text:"Porque α debería ser 0.01",correct:false,fb:"El valor de α no es el problema. El error es lógico: confundir 'no hay evidencia de diferencia' con 'se demostró que son iguales'."}
+    ]
+  },
+  {
+    id:"u3-024", unit:"U3", title:"Comparar p-valor con α",
+    context:"Dos analistas usan los mismos datos. Uno fija α = 0.10 y otro α = 0.01. El p-valor obtenido es 0.04.",
+    prompt:"¿Qué ocurre con sus decisiones?",
+    options:[
+      {text:"Ambos rechazan H₀",correct:false,fb:"Solo el de α = 0.10 rechaza (0.04 < 0.10). El de α = 0.01 NO rechaza, porque 0.04 > 0.01."},
+      {text:"Ambos no rechazan H₀",correct:false,fb:"El de α = 0.10 sí rechaza, porque 0.04 < 0.10. La decisión depende del α elegido."},
+      {text:"El de α = 0.10 rechaza H₀; el de α = 0.01 no",correct:true,fb:"¡Correcto! Con p = 0.04: es menor que 0.10 (se rechaza) pero mayor que 0.01 (no se rechaza). El mismo p-valor lleva a decisiones distintas según el umbral α elegido."},
+      {text:"El p-valor cambia según el α",correct:false,fb:"El p-valor depende solo de los datos, no de α. Lo que cambia es la DECISIÓN al comparar ese p-valor fijo con distintos umbrales."}
+    ]
+  },
+  {
+    id:"u3-025", unit:"U3", title:"Significancia y Tamaño de Muestra",
+    context:"Con una muestra enorme (n = 500.000), una prueba detecta como 'estadísticamente significativa' una diferencia de 0.01% en la tasa de conversión.",
+    prompt:"¿Qué advertencia es la más pertinente?",
+    options:[
+      {text:"Significancia estadística no es lo mismo que relevancia práctica",correct:true,fb:"¡Correcto! Con muestras gigantes, diferencias minúsculas e irrelevantes para el negocio pueden dar p < α. Hay que preguntarse si el efecto es lo bastante grande para importar en la práctica."},
+      {text:"El resultado es inválido porque la muestra es muy grande",correct:false,fb:"Una muestra grande no invalida el resultado: lo hace más preciso. El punto es que la significancia estadística no garantiza importancia práctica."},
+      {text:"Hay que rechazar siempre H₀ con muestras grandes",correct:false,fb:"No es una regla. El tamaño de muestra afecta la sensibilidad, pero la decisión sigue dependiendo de p vs α y del juicio sobre relevancia práctica."},
+      {text:"El p-valor no se puede calcular con n tan grande",correct:false,fb:"El p-valor se calcula sin problema con n grande. La advertencia es sobre interpretar la significancia, no sobre el cálculo."}
+    ]
+  },
+  // ---- Bloque: Z vs t y supuestos ----
+  {
+    id:"u3-026", unit:"U3", title:"Investigación de CLTV",
+    context:"Una empresa SaaS quiere estimar el CLTV promedio de sus suscriptores. Toma una muestra de 28 clientes y, como nunca lo midió, no conoce la desviación estándar poblacional.",
+    prompt:"¿Qué distribución es la más adecuada?",
+    options:[
+      {text:"Distribución Z (normal estándar)",correct:false,fb:"La Z se usa cuando σ poblacional es conocida. Acá no la conocemos y, además, el n es pequeño (28). La t es más apropiada."},
+      {text:"Distribución t de Student",correct:true,fb:"¡Exacto! Cuando σ es desconocida (caso típico) se estima con s muestral, lo que introduce incertidumbre adicional. La distribución t la maneja, con n−1 grados de libertad."},
+      {text:"Distribución Chi-cuadrado",correct:false,fb:"χ² se usa para variables categóricas o inferencia sobre varianzas. Acá el parámetro de interés es una media (cuantitativa)."},
+      {text:"Distribución F de Fisher",correct:false,fb:"F se usa en ANOVA y para comparar varianzas. Para inferir sobre una media con σ desconocida, la t es la elección correcta."}
+    ]
+  },
+  {
+    id:"u3-027", unit:"U3", title:"Cuándo usar Z",
+    context:"En un caso de laboratorio, se conoce que la desviación estándar poblacional del tiempo de carga es exactamente σ = 0.4 segundos, y la muestra es grande.",
+    prompt:"¿Qué distribución corresponde para la prueba sobre la media?",
+    options:[
+      {text:"Distribución t, siempre que sea sobre una media",correct:false,fb:"La t se reserva para cuando σ es desconocida. Acá σ se conoce (0.4 seg), lo que habilita el uso de Z."},
+      {text:"Distribución Z, porque σ es conocida",correct:true,fb:"¡Correcto! Conocer la σ poblacional es la condición clásica para usar la distribución Z. Es un caso raro en la práctica real, pero cuando ocurre, Z es lo apropiado."},
+      {text:"Distribución Chi-cuadrado",correct:false,fb:"χ² no se usa para inferir sobre una media. Con σ conocida y variable cuantitativa, la prueba sobre la media usa Z."},
+      {text:"No se puede hacer ninguna prueba",correct:false,fb:"Sí se puede: con σ conocida, la prueba sobre la media se hace con la distribución Z."}
+    ]
+  },
+  {
+    id:"u3-028", unit:"U3", title:"Razón Fundamental t vs Z",
+    context:"Un estudiante afirma: 'Se usa la t solo cuando n < 30; con n grande siempre se usa Z'.",
+    prompt:"¿Por qué esta regla es una simplificación imprecisa?",
+    options:[
+      {text:"Porque la t se usa cuando σ es desconocida, sin importar tanto el n",correct:true,fb:"¡Correcto! La razón de fondo para usar t es que σ es desconocida y se estima con s. El criterio 'n < 30' es solo una guía de cuándo la diferencia entre t y Z se nota más; con σ desconocida la t sigue siendo la elección técnicamente correcta."},
+      {text:"Porque la t nunca se usa en marketing",correct:false,fb:"Al contrario: la t es la prueba más usada en marketing, precisamente porque σ casi nunca se conoce."},
+      {text:"Porque con n grande siempre hay que usar Chi-cuadrado",correct:false,fb:"χ² no aplica a inferencia sobre medias. El punto es que el criterio decisivo es el conocimiento (o no) de σ."},
+      {text:"Porque la regla del 30 es exactamente correcta",correct:false,fb:"No lo es: es una simplificación. La elección de t depende de que σ sea desconocida, no solo del tamaño muestral."}
+    ]
+  },
+  {
+    id:"u3-029", unit:"U3", title:"Grados de Libertad",
+    context:"Se realiza una prueba t para una media con una muestra de n = 18 observaciones.",
+    prompt:"¿Cuántos grados de libertad tiene la distribución t?",
+    options:[
+      {text:"18",correct:false,fb:"Para la prueba t de una media, los grados de libertad son n − 1, no n. Restá uno."},
+      {text:"17",correct:true,fb:"¡Correcto! En la prueba t para una media, gl = n − 1 = 18 − 1 = 17. Se pierde un grado de libertad al estimar la media muestral."},
+      {text:"19",correct:false,fb:"No se suma uno: en la prueba t de una media los grados de libertad son n − 1 = 17."},
+      {text:"16",correct:false,fb:"Para una sola media se resta solo 1: gl = n − 1 = 17. Restar 2 corresponde a otros contextos (como regresión simple)."}
+    ]
+  },
+  {
+    id:"u3-030", unit:"U3", title:"Supuesto de Normalidad",
+    context:"Se quiere hacer una prueba t sobre el gasto promedio con una muestra pequeña (n = 12). Los datos parecen muy asimétricos.",
+    prompt:"¿Qué supuesto conviene revisar antes de confiar en la prueba?",
+    options:[
+      {text:"Que las observaciones sean categóricas",correct:false,fb:"La prueba t es para variables cuantitativas, no categóricas. Ese no es el supuesto en juego."},
+      {text:"Que la variable (o la distribución muestral de la media) sea aproximadamente normal",correct:true,fb:"¡Correcto! Con n pequeño, la validez de la prueba t depende de que la población sea aproximadamente normal. Con datos muy asimétricos y n bajo, conviene revisar normalidad (histograma, Q-Q plot) o considerar alternativas."},
+      {text:"Que el p-valor sea menor que 0.05",correct:false,fb:"Eso es parte de la decisión, no un supuesto previo. Los supuestos se verifican antes de interpretar el p-valor."},
+      {text:"Que la muestra tenga exactamente 30 datos",correct:false,fb:"No hay un requisito de exactamente 30. Con n chico y datos asimétricos, lo que importa es la normalidad aproximada."}
+    ]
+  },
+  // ---- Bloque: variables y diseño ----
+  {
+    id:"u3-031", unit:"U3", title:"Diseño de Estudio",
+    context:"Un e-commerce de cosmética prueba si enviar emails personalizados con el nombre del cliente aumenta la tasa de clics (CTR) respecto a emails genéricos.",
+    prompt:"¿Cuál es la Variable Independiente (VI)?",
+    options:[
+      {text:"La tasa de clics (CTR)",correct:false,fb:"El CTR es la variable que medimos como resultado: la Variable Dependiente. La VI es lo que manipulamos."},
+      {text:"El tipo de email (personalizado vs. genérico)",correct:true,fb:"¡Exacto! La VI es el factor que el experimentador manipula. Acá los dos niveles son personalizado y genérico. Esperamos que esta variable afecte al CTR (la VD)."},
+      {text:"El nombre del cliente",correct:false,fb:"El nombre es el contenido que define la personalización, pero la variable manipulada es el tipo de email (con o sin personalización)."},
+      {text:"La plataforma de envío de emails",correct:false,fb:"La plataforma es una constante del experimento (la misma para ambos grupos), no la variable manipulada."}
+    ]
+  },
+  {
+    id:"u3-032", unit:"U3", title:"Variable Dependiente",
+    context:"Un estudio mide si cambiar el color de fondo de la página de producto afecta el valor promedio del carrito.",
+    prompt:"¿Cuál es la Variable Dependiente (VD)?",
+    options:[
+      {text:"El color de fondo de la página",correct:false,fb:"El color es lo que se manipula: es la Variable Independiente. La VD es lo que se mide como resultado."},
+      {text:"El valor promedio del carrito",correct:true,fb:"¡Correcto! La VD es la métrica de resultado que esperamos que cambie como consecuencia de manipular la VI. Acá es el valor del carrito."},
+      {text:"El número de páginas de producto",correct:false,fb:"Eso es una característica del sitio, no la métrica de resultado que mide el efecto. La VD es el valor del carrito."},
+      {text:"La cantidad de colores disponibles",correct:false,fb:"No es lo que se mide como efecto. La VD es la variable resultado: el valor promedio del carrito."}
+    ]
+  },
+  {
+    id:"u3-033", unit:"U3", title:"Tipo de Variable",
+    context:"Una encuesta registra, para cada usuario, si recomendaría la tienda (Sí / No).",
+    prompt:"¿Qué tipo de variable es 'recomendaría la tienda'?",
+    options:[
+      {text:"Cuantitativa continua",correct:false,fb:"Una variable continua toma valores numéricos en un rango (tiempos, montos). 'Sí/No' son categorías, no números."},
+      {text:"Categórica (cualitativa)",correct:true,fb:"¡Correcto! 'Sí/No' son categorías sin valor numérico inherente. Es una variable categórica (binaria). Para ella, el parámetro de interés suele ser una proporción p."},
+      {text:"Cuantitativa discreta",correct:false,fb:"Una variable discreta cuenta cantidades enteras (nº de compras). 'Sí/No' no es un conteo, es una categoría."},
+      {text:"Variable de control",correct:false,fb:"'Variable de control' describe un rol en el diseño, no el tipo de dato. El tipo de dato de 'Sí/No' es categórico."}
+    ]
+  },
+  {
+    id:"u3-034", unit:"U3", title:"Población vs Muestra",
+    context:"Una cadena de e-commerce quiere conocer la opinión de todos sus clientes activos, pero solo encuesta a 800 de ellos.",
+    prompt:"¿Qué representan esos 800 clientes?",
+    options:[
+      {text:"La población",correct:false,fb:"La población es el conjunto completo de interés (todos los clientes activos). Los 800 son un subconjunto."},
+      {text:"La muestra",correct:true,fb:"¡Correcto! La muestra es el subconjunto observado (800 clientes) del que extraemos información para inferir sobre la población (todos los clientes activos)."},
+      {text:"Un parámetro",correct:false,fb:"Un parámetro es un valor numérico que describe a la población (como μ o p). Los 800 clientes son un grupo de individuos, no un número resumen."},
+      {text:"Un censo",correct:false,fb:"Un censo mide a TODA la población. Encuestar a 800 de muchos más es un muestreo, no un censo."}
+    ]
+  },
+  {
+    id:"u3-035", unit:"U3", title:"Sesgo de Muestreo",
+    context:"Una tienda encuesta solo a los clientes que dejaron reseña de 5 estrellas para estimar la satisfacción general.",
+    prompt:"¿Qué problema tiene esta muestra?",
+    options:[
+      {text:"Es demasiado grande",correct:false,fb:"El tamaño no es el problema. El problema es cómo se seleccionó la muestra, que distorsiona el resultado."},
+      {text:"Está sesgada: no representa a toda la población de clientes",correct:true,fb:"¡Correcto! Elegir solo a quienes dieron 5 estrellas es un muestreo sesgado: sobreestima la satisfacción porque excluye sistemáticamente a los insatisfechos. La inferencia a 'todos los clientes' no será válida."},
+      {text:"No tiene ningún problema",correct:false,fb:"Sí lo tiene: la muestra no es representativa. Concluir sobre la satisfacción general a partir solo de reseñas de 5 estrellas infla el resultado."},
+      {text:"Usa la distribución t incorrecta",correct:false,fb:"El problema no es la distribución elegida sino el sesgo de selección de la muestra, que invalida la representatividad."}
+    ]
+  },
+  // ---- Bloque: potencia ----
+  {
+    id:"u3-036", unit:"U3", title:"Potencia de la Prueba",
+    context:"Una analista debe diseñar una prueba A/B para detectar un aumento del 2% en la tasa de conversión.",
+    prompt:"¿Qué acción aumenta la potencia (1 − β), manteniendo α constante?",
+    options:[
+      {text:"Reducir el tamaño muestral",correct:false,fb:"Reducir n reduce la potencia. Con menos datos es más difícil detectar efectos reales: el error estándar crece."},
+      {text:"Aumentar el tamaño muestral",correct:true,fb:"¡Correcto! Más datos → menor error estándar → mayor capacidad de detectar efectos reales. Por eso las pruebas A/B requieren cálculos previos de tamaño muestral mínimo."},
+      {text:"Reducir el nivel de significancia α",correct:false,fb:"Reducir α (ej. de 0.05 a 0.01) hace más estricta la regla de rechazo, por lo que β crece y la potencia baja. Es el trade-off clásico."},
+      {text:"No hay forma de aumentar la potencia",correct:false,fb:"Sí hay: aumentar n, aumentar α (más riesgo Tipo I), o un efecto real más grande. Lo más controlable en el diseño es el tamaño muestral."}
+    ]
+  },
+  {
+    id:"u3-037", unit:"U3", title:"Qué es la Potencia",
+    context:"Un equipo habla de que su prueba tiene 'potencia del 80%'.",
+    prompt:"¿Qué significa esa potencia del 80%?",
+    options:[
+      {text:"Probabilidad de detectar un efecto real cuando efectivamente existe",correct:true,fb:"¡Correcto! La potencia = 1 − β = probabilidad de rechazar H₀ cuando es falsa, es decir, de detectar un efecto que sí está presente. 80% es un estándar habitual."},
+      {text:"Probabilidad de que H₀ sea verdadera",correct:false,fb:"La potencia no asigna probabilidad a H₀. Es la capacidad de detectar un efecto real (rechazar H₀ cuando es falsa)."},
+      {text:"Probabilidad de cometer un Error Tipo I",correct:false,fb:"Esa es α. La potencia es 1 − β, relacionada con el Error Tipo II, no con el Tipo I."},
+      {text:"El nivel de confianza del intervalo",correct:false,fb:"El nivel de confianza (ej. 95%) es otro concepto. La potencia se refiere a detectar efectos reales: 1 − β."}
+    ]
+  },
+  {
+    id:"u3-038", unit:"U3", title:"Efecto y Detección",
+    context:"Dos campañas tienen diferencias reales muy pequeñas entre sí en su tasa de conversión.",
+    prompt:"¿Cómo afecta el tamaño del efecto real a la potencia, con todo lo demás constante?",
+    options:[
+      {text:"Efectos más pequeños son más difíciles de detectar (menor potencia)",correct:true,fb:"¡Correcto! Cuanto menor es el efecto real, más difícil es distinguirlo del ruido, por lo que se necesita más muestra para alcanzar la misma potencia. Efectos chicos → menor potencia con n fijo."},
+      {text:"El tamaño del efecto no influye en la potencia",correct:false,fb:"Sí influye: efectos más grandes son más fáciles de detectar. Con efectos chicos hace falta más n para la misma potencia."},
+      {text:"Efectos pequeños siempre dan p-valores chicos",correct:false,fb:"Al revés: efectos pequeños tienden a dar p-valores grandes (más difíciles de detectar), salvo que haya muestras enormes."},
+      {text:"La potencia solo depende de α",correct:false,fb:"La potencia depende de α, del tamaño de muestra Y del tamaño del efecto. No solo de α."}
+    ]
+  },
+  // ---- Bloque: intervalos de confianza ----
+  {
+    id:"u3-039", unit:"U3", title:"Interpretación de IC",
+    context:"Un estudio estima la tasa de conversión con un intervalo de confianza del 95%: [3.2% ; 4.8%].",
+    prompt:"¿Cuál es la interpretación correcta del IC del 95%?",
+    options:[
+      {text:"Hay 95% de probabilidad de que la conversión de un cliente esté entre 3.2% y 4.8%",correct:false,fb:"El IC se refiere al parámetro poblacional (la tasa real), no a un cliente individual. Confunde el parámetro con una observación."},
+      {text:"Con 95% de confianza, la tasa de conversión poblacional real está dentro de ese rango",correct:true,fb:"¡Correcto! El IC del 95% es un rango plausible para el parámetro poblacional. La confianza se interpreta sobre el método: si repitiéramos el muestreo muchas veces, el 95% de los intervalos contendrían el verdadero parámetro."},
+      {text:"El 95% de las muestras dieron exactamente 4%",correct:false,fb:"El IC no dice eso. Describe un rango plausible para el parámetro, no la frecuencia de un valor puntual."},
+      {text:"La muestra tiene un 5% de error de medición",correct:false,fb:"El 95% es el nivel de confianza del método, no un porcentaje de error de medición de los instrumentos."}
+    ]
+  },
+  {
+    id:"u3-040", unit:"U3", title:"Amplitud del IC",
+    context:"Un analista quiere un intervalo de confianza más angosto (más preciso) para la media del ticket.",
+    prompt:"¿Qué acción reduce la amplitud del intervalo, sin cambiar el nivel de confianza?",
+    options:[
+      {text:"Aumentar el tamaño de la muestra",correct:true,fb:"¡Correcto! A mayor n, menor error estándar, y por tanto un intervalo más angosto (más preciso) para el mismo nivel de confianza."},
+      {text:"Aumentar el nivel de confianza a 99%",correct:false,fb:"Subir la confianza ENSANCHA el intervalo, no lo angosta. Más confianza exige un rango más amplio para 'atrapar' al parámetro."},
+      {text:"Reducir el tamaño de la muestra",correct:false,fb:"Reducir n aumenta el error estándar y ENSANCHA el intervalo. Es lo contrario de lo buscado."},
+      {text:"Cambiar de media a proporción",correct:false,fb:"Cambiar el parámetro estimado no es una estrategia válida para angostar el IC de la media. Lo que importa es aumentar n."}
+    ]
+  },
+  {
+    id:"u3-041", unit:"U3", title:"IC y Prueba de Hipótesis",
+    context:"Un IC del 95% para la diferencia de medias entre dos campañas es [−2 ; +8], e incluye el cero.",
+    prompt:"¿Qué sugiere esto respecto a una prueba bilateral con α = 0.05?",
+    options:[
+      {text:"Que se rechazaría H₀ de no diferencia",correct:false,fb:"Al revés. Si el IC del 95% incluye el cero, no hay evidencia de diferencia: NO se rechazaría H₀ a α = 0.05."},
+      {text:"Que NO se rechazaría H₀ de no diferencia",correct:true,fb:"¡Correcto! Un IC del 95% que contiene el 0 indica que 'sin diferencia' (cero) es un valor plausible. Eso equivale a no rechazar H₀ en una prueba bilateral a α = 0.05."},
+      {text:"Que la diferencia es exactamente cero",correct:false,fb:"El IC no prueba que la diferencia sea cero; solo indica que el cero es un valor plausible junto con muchos otros del rango."},
+      {text:"Que el experimento es inválido",correct:false,fb:"Que el IC incluya el cero es un resultado válido y común: simplemente significa que no se detectó diferencia significativa."}
+    ]
+  },
+  // ---- Bloque: pasos del método y traducción al negocio ----
+  {
+    id:"u3-042", unit:"U3", title:"Orden del Método",
+    context:"Un estudiante mira sus datos, ve que x̄ = 4.6 y recién entonces decide plantear H₁: μ > 4.5 para que dé significativo.",
+    prompt:"¿Qué problema metodológico hay?",
+    options:[
+      {text:"Ninguno, está bien usar los datos para elegir la hipótesis",correct:false,fb:"Sí hay problema: definir la hipótesis DESPUÉS de ver los datos infla el riesgo de falsos positivos. Es una mala práctica (p-hacking)."},
+      {text:"Las hipótesis y el α deben fijarse ANTES de mirar los datos",correct:true,fb:"¡Correcto! El método exige plantear H₀, H₁ y α antes de observar los resultados. Elegir la dirección de la hipótesis para que 'dé significativo' invalida la prueba (sesgo de confirmación / p-hacking)."},
+      {text:"El error es haber usado μ en lugar de x̄",correct:false,fb:"Usar μ en la hipótesis es correcto. El error real es el ORDEN: definir la hipótesis después de ver los datos."},
+      {text:"El error es no haber usado distribución Z",correct:false,fb:"La distribución no es el problema. El problema es la secuencia: fijar la hipótesis tras observar los datos."}
+    ]
+  },
+  {
+    id:"u3-043", unit:"U3", title:"Traducción al Negocio",
+    context:"Una prueba concluye: se rechaza H₀, el nuevo flujo de checkout reduce significativamente el tiempo de compra (p = 0.002).",
+    prompt:"¿Cuál es la mejor traducción de negocio?",
+    options:[
+      {text:"El p-valor fue 0.002",correct:false,fb:"Reportar solo el p-valor no es una conclusión de negocio. Hay que traducir qué significa para la operación y la decisión."},
+      {text:"Hay evidencia sólida de que el nuevo checkout agiliza la compra; conviene implementarlo y monitorear",correct:true,fb:"¡Correcto! Una buena conclusión de negocio traduce el resultado estadístico en una acción: implementar el nuevo flujo y seguir midiendo. Eso es lo que pide el enfoque aplicado del curso."},
+      {text:"H₀ era verdadera",correct:false,fb:"Se rechazó H₀, no se confirmó. Además, la idea es traducir al negocio, no repetir la jerga estadística."},
+      {text:"La muestra fue demasiado pequeña",correct:false,fb:"Un p-valor de 0.002 indica evidencia fuerte; nada sugiere muestra insuficiente. Falta la traducción accionable."}
+    ]
+  },
+  {
+    id:"u3-044", unit:"U3", title:"Decisión por Valor Crítico",
+    context:"En una prueba unilateral derecha con α = 0.05, el estadístico calculado es t_calc = 2.10 y el valor crítico es t_crít = 1.71.",
+    prompt:"¿Qué se decide?",
+    options:[
+      {text:"Rechazar H₀, porque t_calc > t_crít",correct:true,fb:"¡Correcto! En una prueba unilateral derecha, se rechaza H₀ si el estadístico calculado supera el valor crítico. Como 2.10 > 1.71, el estadístico cae en la región de rechazo."},
+      {text:"No rechazar H₀, porque t_calc > t_crít",correct:false,fb:"La lógica está invertida. Si t_calc supera el valor crítico, el estadístico está en la región de rechazo, así que SÍ se rechaza H₀."},
+      {text:"Rechazar H₀, porque t_calc < t_crít",correct:false,fb:"2.10 no es menor que 1.71. Además, en una prueba unilateral derecha se rechaza cuando t_calc supera al crítico."},
+      {text:"No se puede decidir sin el p-valor",correct:false,fb:"La vía del valor crítico es una alternativa equivalente al p-valor. Con t_calc y t_crít alcanza para decidir."}
+    ]
+  },
+  {
+    id:"u3-045", unit:"U3", title:"Región de Rechazo Bilateral",
+    context:"Una prueba bilateral usa α = 0.05.",
+    prompt:"¿Cómo se reparte α en las colas?",
+    options:[
+      {text:"0.05 entero en una sola cola",correct:false,fb:"Eso es para pruebas unilaterales. En una bilateral, α se reparte entre ambas colas."},
+      {text:"0.025 en cada cola (α/2)",correct:true,fb:"¡Correcto! En una prueba bilateral, α = 0.05 se divide en α/2 = 0.025 por cola, porque rechazamos si el estadístico cae en cualquiera de los dos extremos."},
+      {text:"0.05 en cada cola, sumando 0.10",correct:false,fb:"Eso duplicaría el riesgo total a 0.10. En una bilateral, el α total se reparte: 0.025 + 0.025 = 0.05."},
+      {text:"No se reparte; las pruebas bilaterales no usan α",correct:false,fb:"Sí usan α: lo reparten en dos colas (α/2 cada una). Por eso los valores críticos bilaterales son más extremos."}
+    ]
+  },
+  {
+    id:"u3-046", unit:"U3", title:"Estadístico de Prueba",
+    context:"Una prueba t para una media calcula t = (x̄ − μ₀) / (s/√n).",
+    prompt:"¿Qué representa el denominador s/√n?",
+    options:[
+      {text:"La desviación estándar de la población",correct:false,fb:"s es la desviación estándar muestral, no poblacional. Y s/√n no es s sola: es el error estándar de la media."},
+      {text:"El error estándar de la media muestral",correct:true,fb:"¡Correcto! s/√n es el error estándar de la media: cuánto varía x̄ de muestra a muestra. El estadístico mide a cuántos errores estándar está x̄ de μ₀."},
+      {text:"El nivel de significancia",correct:false,fb:"α es un umbral de decisión, no aparece en el cálculo del estadístico. s/√n es el error estándar."},
+      {text:"El valor crítico",correct:false,fb:"El valor crítico se obtiene de tablas según α y gl. s/√n es el error estándar que estandariza la diferencia x̄ − μ₀."}
+    ]
+  },
+  {
+    id:"u3-047", unit:"U3", title:"Significancia vs Magnitud",
+    context:"Una prueba sobre tiempos de carga da p = 0.001, pero la diferencia es de apenas 0.005 segundos.",
+    prompt:"¿Qué conviene reportar al negocio?",
+    options:[
+      {text:"Que el resultado es significativo y por tanto la mejora es importante",correct:false,fb:"Significancia estadística no implica importancia práctica. Una diferencia de 0.005 seg probablemente sea irrelevante para el usuario, aunque sea estadísticamente significativa."},
+      {text:"Que la diferencia es estadísticamente significativa, pero su magnitud práctica es despreciable",correct:true,fb:"¡Correcto! Hay que separar significancia (p < α) de relevancia práctica. Aquí el efecto existe pero es tan pequeño que no justifica decisiones costosas. Reportar ambas cosas es lo profesional."},
+      {text:"Que hay que descartar la prueba por el p-valor bajo",correct:false,fb:"Un p-valor bajo no es motivo para descartar nada. El punto es matizar: significativo pero sin relevancia práctica."},
+      {text:"Que el tiempo de carga no cambió",correct:false,fb:"Sí cambió (de forma significativa), solo que muy poco. Negar el cambio no es correcto; matizar su magnitud sí."}
+    ]
+  },
+  {
+    id:"u3-048", unit:"U3", title:"Hipótesis sobre Media — Email",
+    context:"El equipo quiere demostrar que un nuevo asunto de email logra una tasa de apertura media DISTINTA a la histórica de 25%, sin anticipar si sube o baja.",
+    prompt:"¿Qué hipótesis corresponde?",
+    options:[
+      {text:"H₀: p = 0.25 ; H₁: p ≠ 0.25 (bilateral)",correct:true,fb:"¡Correcto! 'Distinta, sin anticipar dirección' → prueba bilateral. H₀: p = 0.25 ; H₁: p ≠ 0.25, con α repartido en ambas colas."},
+      {text:"H₀: p ≤ 0.25 ; H₁: p > 0.25",correct:false,fb:"Eso es unilateral derecha (probar aumento). El enunciado dice 'distinta', sin dirección: corresponde bilateral."},
+      {text:"H₀: p ≥ 0.25 ; H₁: p < 0.25",correct:false,fb:"Eso es unilateral izquierda (probar disminución). El enunciado no anticipa dirección, así que es bilateral."},
+      {text:"H₀: p ≠ 0.25 ; H₁: p = 0.25",correct:false,fb:"Está invertido: la igualdad va siempre en H₀, no en H₁. Lo correcto: H₀: p = 0.25 ; H₁: p ≠ 0.25."}
+    ]
+  },
+  {
+    id:"u3-049", unit:"U3", title:"Confianza y Significancia",
+    context:"Una prueba bilateral usa α = 0.05.",
+    prompt:"¿Qué nivel de confianza le corresponde al intervalo asociado?",
+    options:[
+      {text:"95%",correct:true,fb:"¡Correcto! El nivel de confianza es 1 − α. Con α = 0.05, el IC asociado es del 95%. Por eso un IC del 95% que excluye el valor nulo equivale a rechazar H₀ a α = 0.05."},
+      {text:"5%",correct:false,fb:"5% es el α (nivel de significancia), no la confianza. La confianza es el complemento: 1 − α = 95%."},
+      {text:"90%",correct:false,fb:"90% correspondería a α = 0.10. Con α = 0.05, la confianza es 95%."},
+      {text:"99%",correct:false,fb:"99% correspondería a α = 0.01. Con α = 0.05, la confianza es 95%."}
+    ]
+  },
+  {
+    id:"u3-050", unit:"U3", title:"Interpretar un Resultado No Significativo",
+    context:"Una prueba sobre una nueva función de la app da p = 0.18 con α = 0.05. El equipo había invertido mucho en la función.",
+    prompt:"¿Cuál es la conclusión y postura correcta?",
+    options:[
+      {text:"Como invirtieron mucho, hay que rechazar H₀ igual",correct:false,fb:"La inversión previa no cambia la regla de decisión. Con p = 0.18 > α, no hay evidencia para rechazar H₀ (sesgo de costo hundido)."},
+      {text:"No hay evidencia suficiente del efecto; conviene no asumir mejora y, si interesa, testear con más muestra",correct:true,fb:"¡Correcto! p = 0.18 > 0.05 → no se rechaza H₀. No se demuestra que la función no sirva, pero tampoco hay evidencia de que mejore. Una opción válida es recolectar más datos antes de decidir."},
+      {text:"Se demostró que la función no sirve",correct:false,fb:"No rechazar H₀ no prueba que la función sea inútil. Solo indica falta de evidencia de mejora con los datos actuales."},
+      {text:"El p-valor confirma H₁",correct:false,fb:"Un p-valor de 0.18 no confirma H₁; al contrario, es compatible con H₀. No se rechaza."}
+    ]
+  },
+  {
+    id:"u3-051", unit:"U3", title:"Diferencia Hipotética",
+    context:"En una prueba para una media, el enunciado fija que el valor de referencia es μ₀ = 100.",
+    prompt:"¿Dónde aparece μ₀ en el planteo?",
+    options:[
+      {text:"Solo en el cálculo de la muestra",correct:false,fb:"μ₀ no se calcula con la muestra: es un valor dado de referencia que aparece en las hipótesis y en el estadístico de prueba."},
+      {text:"En H₀ y H₁ (como valor de comparación) y en el estadístico de prueba",correct:true,fb:"¡Correcto! μ₀ es el valor de referencia: aparece en las hipótesis (ej. H₀: μ = 100) y en el numerador del estadístico (x̄ − μ₀). Es el punto contra el que comparamos."},
+      {text:"Únicamente en el nivel de significancia",correct:false,fb:"α es independiente de μ₀. El valor de referencia μ₀ va en las hipótesis y en el estadístico, no en α."},
+      {text:"En ninguna parte; es irrelevante",correct:false,fb:"μ₀ es central: define contra qué valor se contrasta la media. Sin μ₀ no se puede formular la prueba."}
+    ]
+  },
+  {
+    id:"u3-052", unit:"U3", title:"Inferencia Estadística",
+    context:"Una empresa usa datos de 1.000 visitantes de una campaña para concluir algo sobre todos sus potenciales clientes.",
+    prompt:"¿Qué proceso describe esto?",
+    options:[
+      {text:"Inferencia estadística: de la muestra a la población",correct:true,fb:"¡Correcto! Inferencia estadística es justamente usar datos muestrales (1.000 visitantes) para extraer conclusiones sobre un parámetro de la población (todos los potenciales clientes)."},
+      {text:"Un censo poblacional",correct:false,fb:"Un censo mediría a TODA la población. Aquí se usa una muestra de 1.000 para inferir sobre el total."},
+      {text:"Estadística puramente descriptiva",correct:false,fb:"La descriptiva solo resume los datos observados. Aquí se va más allá: se infiere sobre la población, lo que es inferencia."},
+      {text:"Un experimento sin hipótesis",correct:false,fb:"Concluir sobre la población a partir de una muestra es inferencia, tenga o no una hipótesis formal asociada."}
+    ]
+  },
+  {
+    id:"u3-053", unit:"U3", title:"Error Estándar y n",
+    context:"Dos muestras estiman la misma media: una con n = 50 y otra con n = 500.",
+    prompt:"¿Qué muestra tiene menor error estándar de la media?",
+    options:[
+      {text:"La de n = 50",correct:false,fb:"Al revés. El error estándar es s/√n: a mayor n, menor error estándar. La muestra de n = 500 es más precisa."},
+      {text:"La de n = 500",correct:true,fb:"¡Correcto! El error estándar de la media es s/√n. Como n está en el denominador (con raíz), muestras más grandes producen errores estándar más pequeños y estimaciones más precisas."},
+      {text:"Ambas tienen el mismo error estándar",correct:false,fb:"No: el error estándar depende de n. Con n distinto (500 vs 50), el de mayor n es menor."},
+      {text:"Depende solo del nivel de confianza",correct:false,fb:"El error estándar depende de s y de n, no del nivel de confianza. La de n = 500 tiene menor error estándar."}
+    ]
+  },
+  {
+    id:"u3-054", unit:"U3", title:"Hipótesis Nula como Statu Quo",
+    context:"Una empresa lanza una nueva versión del sitio. Quiere mantener el sitio actual a menos que haya evidencia fuerte de mejora.",
+    prompt:"¿Qué representa H₀ en este enfoque?",
+    options:[
+      {text:"La nueva versión es mejor",correct:false,fb:"Eso es lo que se quiere PROBAR (va en H₁). H₀ representa el statu quo, el escenario por defecto."},
+      {text:"El statu quo: no hay mejora respecto al sitio actual",correct:true,fb:"¡Correcto! H₀ es el escenario por defecto / conservador: 'no hay mejora'. Solo se abandona el sitio actual si los datos aportan evidencia fuerte en contra de H₀."},
+      {text:"El nivel de significancia",correct:false,fb:"α es un umbral de decisión, no una hipótesis. H₀ aquí es 'no hay mejora' (statu quo)."},
+      {text:"La muestra de usuarios",correct:false,fb:"H₀ es una afirmación sobre el parámetro poblacional, no la muestra. Representa el statu quo: sin mejora."}
+    ]
+  },
+  {
+    id:"u3-055", unit:"U3", title:"Elección de la Cola — ROI",
+    context:"Se quiere probar que una campaña nueva tiene un ROI promedio SUPERIOR al de la campaña anterior.",
+    prompt:"¿Dónde queda la región de rechazo?",
+    options:[
+      {text:"En la cola derecha",correct:true,fb:"¡Correcto! 'Superior / mayor' → H₁: μ > μ₀ (unilateral derecha). La región de rechazo queda en la cola derecha: se rechaza H₀ si el estadístico es suficientemente grande y positivo."},
+      {text:"En la cola izquierda",correct:false,fb:"La cola izquierda corresponde a 'menor / disminuye'. Aquí buscamos demostrar que es SUPERIOR, así que es la cola derecha."},
+      {text:"Repartida en ambas colas",correct:false,fb:"Eso sería bilateral ('distinto'). El enunciado tiene dirección clara ('superior'), por lo que es unilateral derecha."},
+      {text:"No hay región de rechazo en pruebas de ROI",correct:false,fb:"Toda prueba de hipótesis tiene región de rechazo. Aquí, por ser 'superior', está en la cola derecha."}
+    ]
+  },
+  {
+    id:"u3-056", unit:"U3", title:"Qué NO prueba un IC",
+    context:"Un IC del 90% para la media del ticket es [4.800 ; 5.200].",
+    prompt:"¿Cuál afirmación es INCORRECTA?",
+    options:[
+      {text:"El valor 5.000 es plausible para la media poblacional",correct:false,fb:"Esta afirmación es correcta: 5.000 está dentro del rango, así que es un valor plausible. No es la respuesta buscada."},
+      {text:"Hay 90% de probabilidad de que un cliente individual gaste entre 4.800 y 5.200",correct:true,fb:"¡Esta es la incorrecta! El IC habla del parámetro poblacional (la media), no de un cliente individual. Confundir el IC con el rango de valores individuales es un error clásico."},
+      {text:"El método usado captura el parámetro el 90% de las veces a largo plazo",correct:false,fb:"Esta afirmación es correcta: así se interpreta el nivel de confianza. No es la respuesta buscada (la consigna pide la incorrecta)."},
+      {text:"Un IC del 95% sería más ancho que este",correct:false,fb:"Esta afirmación es correcta: más confianza → intervalo más ancho. No es la respuesta buscada."}
+    ]
+  },
+  {
+    id:"u3-057", unit:"U3", title:"Pre-Post sobre una Media",
+    context:"Se mide el tiempo en página de los MISMOS usuarios antes y después de un rediseño, y se quiere ver si cambió.",
+    prompt:"Aunque es tema de U4, ¿qué distingue este diseño desde la lógica de U3?",
+    options:[
+      {text:"Que hay dos mediciones relacionadas sobre los mismos sujetos",correct:true,fb:"¡Correcto! Medir a los mismos usuarios dos veces genera observaciones dependientes (apareadas). Esto conecta con U3 (prueba sobre una media) porque se analiza la media de las DIFERENCIAS dentro de cada sujeto."},
+      {text:"Que son dos grupos de usuarios completamente distintos",correct:false,fb:"No: son los MISMOS usuarios medidos dos veces. Eso es un diseño apareado, no de grupos independientes."},
+      {text:"Que no se puede aplicar ninguna prueba",correct:false,fb:"Sí se puede: una prueba t apareada, que en el fondo es una prueba t de una media sobre las diferencias."},
+      {text:"Que la variable es categórica",correct:false,fb:"El tiempo en página es cuantitativo. Lo distintivo es que las mediciones son apareadas (mismos sujetos)."}
+    ]
+  },
+  {
+    id:"u3-058", unit:"U3", title:"Conclusión Mal Redactada",
+    context:"Un informe dice: 'El p-valor de 0.50 demuestra que hay un 50% de chances de que la campaña funcione'.",
+    prompt:"¿Por qué está mal?",
+    options:[
+      {text:"Porque el p-valor no es la probabilidad de que la campaña funcione",correct:true,fb:"¡Correcto! El p-valor es P(datos o más extremos | H₀ verdadera), no la probabilidad de que la campaña funcione ni de que una hipótesis sea cierta. La redacción malinterpreta por completo el p-valor."},
+      {text:"Porque 0.50 siempre lleva a rechazar H₀",correct:false,fb:"0.50 > α (típicamente 0.05), así que NO se rechaza H₀. Pero el error principal de la frase es interpretar mal qué es el p-valor."},
+      {text:"Porque debería usar α = 0.50",correct:false,fb:"El valor de α no es el problema. El error es conceptual: el p-valor no mide 'chances de que la campaña funcione'."},
+      {text:"Porque falta calcular la media muestral",correct:false,fb:"El problema no es de cálculo sino de interpretación: confunde el p-valor con la probabilidad de éxito de la campaña."}
+    ]
+  },
+  {
+    id:"u3-059", unit:"U3", title:"Elección de α según Contexto",
+    context:"Un test médico online debe minimizar el riesgo de dar por seguro un resultado que en realidad es peligroso (falso positivo de seguridad).",
+    prompt:"¿Cómo conviene ajustar α en un contexto donde el Error Tipo I es muy costoso?",
+    options:[
+      {text:"Usar un α más pequeño (ej. 0.01) para reducir el riesgo de falso positivo",correct:true,fb:"¡Correcto! α controla directamente el riesgo de Error Tipo I. Si ese error es muy costoso, conviene un α más exigente (ej. 0.01), aun a costa de un mayor β (menor potencia)."},
+      {text:"Usar un α más grande (ej. 0.20)",correct:false,fb:"Aumentar α incrementa el riesgo de Error Tipo I (falso positivo), justo lo que se quiere evitar en este contexto."},
+      {text:"Eliminar α por completo",correct:false,fb:"No se puede prescindir de α: es el umbral de decisión. Para reducir el Tipo I, se lo hace más pequeño, no se lo elimina."},
+      {text:"α no influye en el Error Tipo I",correct:false,fb:"α ES precisamente la probabilidad de Error Tipo I. Reducir α reduce ese riesgo."}
+    ]
+  },
+  {
+    id:"u3-060", unit:"U3", title:"Síntesis del Razonamiento",
+    context:"Un analista resume: 'Planteo hipótesis sobre el parámetro, fijo α, calculo el estadístico, obtengo el p-valor y decido'.",
+    prompt:"¿Qué paso clave conviene agregar al final para un trabajo profesional?",
+    options:[
+      {text:"Traducir la conclusión estadística a una decisión de negocio accionable",correct:true,fb:"¡Correcto! El curso enfatiza cerrar el ciclo: no basta con rechazar o no H₀; hay que interpretar qué implica para la campaña, el presupuesto o la experiencia de usuario. La estadística es un medio para decidir."},
+      {text:"Volver a mirar los datos para ajustar la hipótesis",correct:false,fb:"Eso es justamente lo que NO se debe hacer: cambiar la hipótesis después de ver los datos invalida la prueba (p-hacking)."},
+      {text:"Aumentar α hasta que el resultado sea significativo",correct:false,fb:"Manipular α para forzar significancia es mala praxis. El paso profesional es traducir el resultado al negocio."},
+      {text:"Eliminar los datos que no convienen",correct:false,fb:"Descartar datos selectivamente es fraude analítico. Lo correcto es interpretar el resultado y traducirlo a una decisión."}
+    ]
+  },
+  // ╔══════════════════════════════════════════════════════╗
+  // ║  UNIDAD 4 · ANOVA, χ², correlación, regresión         ║
+  // ╚══════════════════════════════════════════════════════╝
+
+  // ---- Bloque: dos medias (independientes vs apareadas) ----
+  {
+    id:"u4-001", unit:"U4", title:"Comparación de Dos Pasarelas de Pago",
+    context:"Una fintech compara el tiempo de procesamiento entre dos pasarelas. Pide a 30 testers que usen AMBAS pasarelas para la misma compra simulada y registra el tiempo en cada caso.",
+    prompt:"¿Qué prueba es la más apropiada?",
+    options:[
+      {text:"Prueba t para muestras independientes",correct:false,fb:"Esa se usa cuando los grupos son distintos (clientes diferentes en cada grupo). Acá los MISMOS testers usan ambas pasarelas: hay dependencia entre las dos mediciones."},
+      {text:"Prueba t para muestras apareadas (dependientes)",correct:true,fb:"¡Exacto! Cada tester aporta un par de observaciones (una por pasarela). Se analizan las diferencias dᵢ dentro de cada par. Esto controla la variabilidad entre individuos y aumenta la potencia."},
+      {text:"ANOVA de un factor",correct:false,fb:"ANOVA es para comparar 3 o más grupos. Acá solo hay 2 (las dos pasarelas), por lo que una prueba t es suficiente."},
+      {text:"Prueba Chi-cuadrado",correct:false,fb:"χ² es para variables categóricas. Acá la variable de interés (tiempo de procesamiento) es cuantitativa."}
+    ]
+  },
+  {
+    id:"u4-002", unit:"U4", title:"Test A/B Clásico",
+    context:"Una lista de suscriptores se divide al azar en dos grupos disjuntos: uno recibe el email A y otro el email B. Se compara el CTR promedio.",
+    prompt:"¿Qué tipo de muestras son?",
+    options:[
+      {text:"Apareadas, porque comparan dos versiones de email",correct:false,fb:"Comparar dos versiones no las hace apareadas. Lo que define el apareamiento es que sean los MISMOS sujetos. Acá los grupos son disjuntos (personas distintas)."},
+      {text:"Independientes, porque son personas distintas en cada grupo",correct:true,fb:"¡Correcto! Al dividir la lista en grupos disjuntos, cada suscriptor recibe solo una versión. Las personas de un grupo no tienen relación con las del otro → muestras independientes (prueba t de Welch)."},
+      {text:"Dependientes, porque vienen de la misma lista",correct:false,fb:"Provenir de la misma lista no las hace dependientes: lo que importa es que cada persona esté en UN solo grupo. Son independientes."},
+      {text:"No se pueden comparar estadísticamente",correct:false,fb:"Claro que se pueden: es el caso típico de A/B con muestras independientes y prueba t."}
+    ]
+  },
+  {
+    id:"u4-003", unit:"U4", title:"Pre-Post con los Mismos Clientes",
+    context:"Se mide la satisfacción de un grupo de clientes con el checkout ANTES de un rediseño y luego de ESOS MISMOS clientes DESPUÉS del rediseño.",
+    prompt:"¿Qué diseño y prueba corresponde?",
+    options:[
+      {text:"Independientes · t de Welch",correct:false,fb:"No son independientes: son los mismos clientes medidos dos veces. Eso genera observaciones apareadas."},
+      {text:"Apareadas · t para muestras dependientes sobre las diferencias",correct:true,fb:"¡Correcto! Medir a los mismos clientes antes y después es un diseño pre-post (apareado). Se calcula dᵢ = después − antes y se hace una prueba t sobre la media de esas diferencias."},
+      {text:"Tres o más grupos · ANOVA",correct:false,fb:"Solo hay dos momentos (antes y después), no tres grupos. ANOVA no corresponde."},
+      {text:"Categóricas · Chi-cuadrado",correct:false,fb:"La satisfacción medida numéricamente es cuantitativa, y el diseño es apareado: corresponde t para muestras dependientes."}
+    ]
+  },
+  {
+    id:"u4-004", unit:"U4", title:"Estadístico t de Welch",
+    context:"Un analista compara el ROAS promedio de dos campañas en distintas plataformas, con muestras independientes y varianzas que asume desiguales.",
+    prompt:"¿Cuál es la forma del estadístico t (Welch)?",
+    options:[
+      {text:"t = (x̄₁ − x̄₂) / √(s₁²/n₁ + s₂²/n₂)",correct:true,fb:"¡Correcto! En Welch (varianzas desiguales), el error estándar usa cada varianza muestral dividida por su propio n. No se combinan las varianzas como en el caso de varianzas iguales."},
+      {text:"t = (x̄₁ + x̄₂) / 2",correct:false,fb:"Eso es un promedio simple, no un estadístico de prueba. Falta la diferencia y el error estándar en el denominador."},
+      {text:"t = (x̄₁ − x̄₂)",correct:false,fb:"Es solo la diferencia de medias sin estandarizar. Falta dividir por el error estándar de la diferencia."},
+      {text:"t = (s₁² − s₂²) / n",correct:false,fb:"Esa expresión no corresponde a la prueba de medias. Mezcla varianzas sin las medias muestrales."}
+    ]
+  },
+  {
+    id:"u4-005", unit:"U4", title:"¿Por qué Welch por Defecto?",
+    context:"Un analista no tiene información previa sobre las varianzas de dos grupos independientes que va a comparar.",
+    prompt:"¿Por qué la prueba de Welch es la opción segura por defecto?",
+    options:[
+      {text:"Porque siempre da p-valores más chicos",correct:false,fb:"Welch no busca p-valores chicos. Su ventaja es la robustez ante varianzas desiguales, no inflar la significancia."},
+      {text:"Porque es robusta cuando las varianzas de los grupos son distintas",correct:true,fb:"¡Correcto! Welch no asume varianzas iguales, por lo que mantiene su validez aun cuando las dispersiones difieren — lo habitual en datos reales. Por eso es la opción segura cuando no hay razones fuertes para asumir igualdad."},
+      {text:"Porque no necesita calcular medias",correct:false,fb:"Welch sí usa las medias de ambos grupos en el numerador. Su particularidad está en cómo combina las varianzas."},
+      {text:"Porque sirve para variables categóricas",correct:false,fb:"Welch es para comparar medias (variables cuantitativas). Para categóricas se usa χ²."}
+    ]
+  },
+  {
+    id:"u4-006", unit:"U4", title:"Hipótesis en Diferencia de Medias",
+    context:"Se quiere probar si el diseño B de un email genera un AOV (ticket promedio) MAYOR que el diseño A.",
+    prompt:"¿Cuál es el par de hipótesis correcto?",
+    options:[
+      {text:"H₀: μ_B ≤ μ_A ; H₁: μ_B > μ_A",correct:true,fb:"¡Correcto! Queremos demostrar que B supera a A (μ_B > μ_A), eso va en H₁ (unilateral derecha). H₀ es el complemento: B no supera a A (μ_B ≤ μ_A)."},
+      {text:"H₀: μ_B = μ_A ; H₁: μ_B ≠ μ_A",correct:false,fb:"Sería bilateral, pero el enunciado tiene dirección clara ('mayor'). Corresponde una prueba unilateral derecha."},
+      {text:"H₀: μ_B > μ_A ; H₁: μ_B ≤ μ_A",correct:false,fb:"Está invertido: la afirmación que se quiere probar (B mayor) va en H₁, no en H₀. Y la igualdad siempre va en H₀."},
+      {text:"H₀: μ_B ≥ μ_A ; H₁: μ_B < μ_A",correct:false,fb:"Eso probaría que B es MENOR que A. El enunciado busca demostrar que B es mayor. Invertiste la dirección."}
+    ]
+  },
+  {
+    id:"u4-007", unit:"U4", title:"Signo del Estadístico",
+    context:"En Excel, al hacer la prueba t para diferencia de medias, se define Grupo 1 = A y Grupo 2 = B. B tiene media mayor que A.",
+    prompt:"¿Qué signo tendrá el estadístico t calculado como (x̄_A − x̄_B)?",
+    options:[
+      {text:"Positivo",correct:false,fb:"Si B es mayor que A, entonces x̄_A − x̄_B es negativo. El signo depende del orden en que se restan las medias."},
+      {text:"Negativo",correct:true,fb:"¡Correcto! Como x̄_B > x̄_A, la resta (x̄_A − x̄_B) da negativa. Por eso es crucial ser consistente con qué grupo es el 1 y cuál el 2 al interpretar el signo y la cola de la prueba."},
+      {text:"Siempre cero",correct:false,fb:"Solo sería cero si las medias fueran iguales. Como difieren (B mayor), el estadístico no es cero."},
+      {text:"No tiene signo",correct:false,fb:"El estadístico t sí tiene signo, determinado por el orden de la resta. Aquí, con B mayor y orden A−B, es negativo."}
+    ]
+  },
+  {
+    id:"u4-008", unit:"U4", title:"Variable de Análisis en Apareadas",
+    context:"En una prueba t apareada sobre tiempos antes/después, se trabaja con dᵢ = después − antes para cada sujeto.",
+    prompt:"¿Sobre qué se formula realmente la hipótesis?",
+    options:[
+      {text:"Sobre la media de las diferencias poblacionales, μ_D",correct:true,fb:"¡Correcto! La prueba apareada se reduce a una prueba t de UNA muestra sobre las diferencias dᵢ. La hipótesis es sobre μ_D (la media poblacional de las diferencias), típicamente H₀: μ_D = 0."},
+      {text:"Sobre dos medias independientes",correct:false,fb:"No son independientes: el truco apareado convierte las dos columnas en una sola de diferencias. La hipótesis es sobre μ_D."},
+      {text:"Sobre la varianza de los tiempos",correct:false,fb:"La prueba apareada se centra en la MEDIA de las diferencias (μ_D), no en la varianza."},
+      {text:"Sobre una proporción",correct:false,fb:"El tiempo es cuantitativo y se analizan diferencias. El parámetro es μ_D, una media, no una proporción."}
+    ]
+  },
+  {
+    id:"u4-009", unit:"U4", title:"Ventaja del Diseño Apareado",
+    context:"Para comparar dos programas de fidelización, se forman pares de clientes con historiales de compra muy similares y a cada miembro del par se le asigna un programa distinto.",
+    prompt:"¿Cuál es la ventaja principal de este emparejamiento?",
+    options:[
+      {text:"Controla la variabilidad entre individuos, aumentando la sensibilidad de la prueba",correct:true,fb:"¡Correcto! Al emparejar por características relevantes (historial similar), se reduce el 'ruido' debido a diferencias entre personas, de modo que la prueba detecta mejor el efecto real del programa. Mayor potencia."},
+      {text:"Permite usar variables categóricas",correct:false,fb:"El emparejamiento no cambia el tipo de variable. La ventaja es estadística: controla la variabilidad entre sujetos."},
+      {text:"Elimina la necesidad de plantear hipótesis",correct:false,fb:"Las hipótesis siguen siendo necesarias. El emparejamiento mejora la sensibilidad, no elimina el método."},
+      {text:"Convierte el estudio en un ANOVA",correct:false,fb:"Sigue siendo una comparación de dos condiciones (prueba t apareada), no un ANOVA de 3+ grupos."}
+    ]
+  },
+  {
+    id:"u4-010", unit:"U4", title:"Decisión con p-valor Alto (dos medias)",
+    context:"Se compara el tiempo en sitio de dos versiones de la home (A y B). Se obtiene p-valor = 0.34, con α = 0.05.",
+    prompt:"¿Cuál es la conclusión correcta?",
+    options:[
+      {text:"La versión A es mejor con un 66% de confianza",correct:false,fb:"Mala interpretación del p-valor: no se convierte en 'confianza' de esa forma. Y con p = 0.34 no hay evidencia de diferencia, menos de superioridad."},
+      {text:"No hay evidencia suficiente de que las versiones difieran; no se rechaza H₀",correct:true,fb:"¡Correcto! p (0.34) > α (0.05) → no se rechaza H₀. Esto no prueba que A y B sean iguales, solo que los datos no detectan una diferencia. Testear con más muestra es una opción razonable."},
+      {text:"Se demuestra que A y B son idénticas",correct:false,fb:"No rechazar H₀ no prueba H₀. Podría haber una diferencia real no detectada (Error Tipo II)."},
+      {text:"Hay que rechazar H₀ porque p > 0.30",correct:false,fb:"La regla compara p con α (0.05), no con 0.30. Como p > α, no se rechaza."}
+    ]
+  },
+  // ---- Bloque: ANOVA ----
+  {
+    id:"u4-011", unit:"U4", title:"Comparación de Múltiples Mensajes",
+    context:"Un equipo de growth tiene 4 versiones de copy para una misma campaña y quiere saber si alguna genera un CTR promedio diferente.",
+    prompt:"¿Por qué usar ANOVA en lugar de múltiples pruebas t por pares?",
+    options:[
+      {text:"Porque ANOVA es más fácil de calcular en Excel",correct:false,fb:"No es por facilidad. La razón es estadística: control del error. Excel hace ambas con esfuerzo similar."},
+      {text:"Porque múltiples pruebas t inflan la probabilidad de cometer al menos un Error Tipo I",correct:true,fb:"¡Correcto! Con 4 grupos hay 6 comparaciones por pares; al 5% cada una, la probabilidad acumulada de al menos un falso positivo se dispara. ANOVA hace una sola prueba global con α = 0.05."},
+      {text:"Porque ANOVA siempre detecta diferencias que la t no detecta",correct:false,fb:"No es cuestión de sensibilidad sino de control del Error Tipo I global. ANOVA es la herramienta correcta para múltiples grupos."},
+      {text:"Porque ANOVA no requiere supuestos",correct:false,fb:"Falso: ANOVA exige independencia, normalidad y homocedasticidad. Comparte varios supuestos con la prueba t."}
+    ]
+  },
+  {
+    id:"u4-012", unit:"U4", title:"Hipótesis en ANOVA",
+    context:"Un e-commerce compara las tasas promedio de conversión de 3 plantillas de checkout (A, B, C).",
+    prompt:"¿Cuál es la Hipótesis Alternativa (H₁) en el ANOVA de un factor?",
+    options:[
+      {text:"H₁: μ_A ≠ μ_B ≠ μ_C (las tres distintas entre sí)",correct:false,fb:"Demasiado restrictiva. H₁ no exige que las TRES sean diferentes entre sí, solo que NO TODAS sean iguales."},
+      {text:"H₁: al menos una de las medias es diferente del resto",correct:true,fb:"¡Exacto! Si rechazás H₀, sabés que hay diferencias en alguna parte, pero no cuál. Para identificarlas necesitás pruebas post-hoc (Tukey, Bonferroni)."},
+      {text:"H₁: μ_A > μ_B > μ_C",correct:false,fb:"Esa sería una hipótesis ordenada que ANOVA no prueba directamente. ANOVA es no direccional respecto a qué grupo es mayor."},
+      {text:"H₁: las varianzas son diferentes",correct:false,fb:"ANOVA prueba sobre las MEDIAS. La igualdad de varianzas es un SUPUESTO (homocedasticidad), no la hipótesis de interés."}
+    ]
+  },
+  {
+    id:"u4-013", unit:"U4", title:"La Lógica de ANOVA",
+    context:"Un estudiante se sorprende de que ANOVA se llame 'Análisis de Varianza' si en realidad compara medias.",
+    prompt:"¿Cómo compara medias analizando varianzas?",
+    options:[
+      {text:"Comparando la variabilidad ENTRE grupos contra la variabilidad DENTRO de los grupos",correct:true,fb:"¡Correcto! Si las medias fueran iguales, la variación entre grupos sería similar a la variación interna. Si alguna media difiere, la variación entre grupos crece. El estadístico F = variabilidad entre / variabilidad dentro captura esto."},
+      {text:"Sumando todas las medias y dividiéndolas",correct:false,fb:"ANOVA no es un simple promedio de medias. Descompone la variabilidad total en componentes entre y dentro de grupos."},
+      {text:"Calculando la mediana de cada grupo",correct:false,fb:"ANOVA no usa medianas. Trabaja con medias y con la descomposición de la varianza."},
+      {text:"Comparando las proporciones de cada grupo",correct:false,fb:"ANOVA es para variables cuantitativas (medias), no proporciones. La clave es la razón de varianzas (F)."}
+    ]
+  },
+  {
+    id:"u4-014", unit:"U4", title:"El Estadístico F",
+    context:"En una tabla ANOVA, el estadístico F es la razón entre dos cantidades.",
+    prompt:"¿Qué representa un F grande?",
+    options:[
+      {text:"Que la variabilidad entre grupos supera ampliamente a la de dentro de los grupos",correct:true,fb:"¡Correcto! F = MSB/MSW. Un F grande indica que la variación entre las medias de los grupos es mucho mayor que la variación interna esperable por azar, lo que lleva a rechazar H₀."},
+      {text:"Que todos los grupos tienen exactamente la misma media",correct:false,fb:"Si las medias fueran iguales, F tendería a ser pequeño (cercano a 1), no grande."},
+      {text:"Que la muestra es demasiado pequeña",correct:false,fb:"F no mide tamaño muestral. Mide la razón entre variabilidad entre grupos y dentro de grupos."},
+      {text:"Que hay un error en los datos",correct:false,fb:"Un F grande no indica error: indica evidencia de que las medias difieren."}
+    ]
+  },
+  {
+    id:"u4-015", unit:"U4", title:"Supuestos de ANOVA",
+    context:"Antes de confiar en un ANOVA, hay que verificar ciertos supuestos.",
+    prompt:"¿Cuál de estos NO es un supuesto de ANOVA?",
+    options:[
+      {text:"Independencia de las observaciones",correct:false,fb:"Sí es un supuesto de ANOVA. No es la respuesta buscada."},
+      {text:"Normalidad dentro de cada grupo",correct:false,fb:"Sí es un supuesto de ANOVA. No es la respuesta buscada."},
+      {text:"Homogeneidad de varianzas (homocedasticidad)",correct:false,fb:"Sí es un supuesto de ANOVA. No es la respuesta buscada."},
+      {text:"Que todas las medias sean iguales",correct:true,fb:"¡Correcto! 'Que todas las medias sean iguales' NO es un supuesto: es justamente la hipótesis nula que se pone a prueba. Los supuestos son independencia, normalidad y homocedasticidad."}
+    ]
+  },
+  {
+    id:"u4-016", unit:"U4", title:"Después del ANOVA",
+    context:"Un equipo realiza ANOVA comparando 4 campañas y obtiene F = 8.92 con p-valor = 0.0001 (α = 0.05).",
+    prompt:"¿Qué corresponde hacer ahora?",
+    options:[
+      {text:"Concluir que la campaña con mayor media muestral es la mejor",correct:false,fb:"Apresurado. La media más alta podría no diferir significativamente de la segunda. ANOVA dice que hay diferencias, pero no cuáles son significativas."},
+      {text:"Aplicar una prueba post-hoc (Tukey, Bonferroni) para identificar qué pares difieren",correct:true,fb:"¡Correcto! ANOVA detecta que hay diferencias pero no entre qué grupos. Las post-hoc comparan los pares ajustando el nivel de significancia para mantener el control del Error Tipo I global."},
+      {text:"Repetir el ANOVA con más datos",correct:false,fb:"No hace falta: ya rechazaste H₀ con evidencia fuerte (p = 0.0001). El paso lógico es identificar entre qué grupos están las diferencias."},
+      {text:"Hacer pruebas t individuales sin corrección",correct:false,fb:"Eso reintroduce el problema que ANOVA evitó: inflación del Error Tipo I. Hay que usar correcciones (Bonferroni) o métodos post-hoc (Tukey)."}
+    ]
+  },
+  {
+    id:"u4-017", unit:"U4", title:"Qué NO dice ANOVA",
+    context:"Tras un ANOVA significativo sobre 3 mensajes de marketing, un analista quiere saber cuál mensaje es el mejor.",
+    prompt:"¿Por qué ANOVA por sí solo no responde eso?",
+    options:[
+      {text:"Porque ANOVA solo indica si existe al menos una diferencia, no dónde está",correct:true,fb:"¡Correcto! ANOVA es una prueba global: rechazar H₀ significa 'no todas las medias son iguales', pero no identifica qué par concreto difiere. Para eso se necesitan pruebas post-hoc."},
+      {text:"Porque ANOVA no usa medias",correct:false,fb:"ANOVA sí compara medias (vía varianzas). Lo que no hace es indicar QUÉ par específico difiere."},
+      {text:"Porque ANOVA solo sirve para 2 grupos",correct:false,fb:"Al contrario: ANOVA es para 3 o más grupos. Su limitación es que no señala el par concreto que difiere."},
+      {text:"Porque ANOVA no da p-valor",correct:false,fb:"ANOVA sí da p-valor (vía F). Lo que no da es la ubicación específica de las diferencias entre pares."}
+    ]
+  },
+  {
+    id:"u4-018", unit:"U4", title:"Grados de Libertad en ANOVA",
+    context:"Un ANOVA compara k = 3 grupos con N = 18 observaciones totales.",
+    prompt:"¿Cuáles son los grados de libertad entre grupos y dentro de grupos?",
+    options:[
+      {text:"Entre = 2 ; Dentro = 15",correct:true,fb:"¡Correcto! gl entre grupos = k − 1 = 3 − 1 = 2. gl dentro de grupos = N − k = 18 − 3 = 15. (Total = N − 1 = 17.)"},
+      {text:"Entre = 3 ; Dentro = 18",correct:false,fb:"No se usa k ni N directamente. gl entre = k − 1 = 2 ; gl dentro = N − k = 15."},
+      {text:"Entre = 17 ; Dentro = 2",correct:false,fb:"Invertiste los valores. gl entre = k − 1 = 2 (chico, son pocos grupos); gl dentro = N − k = 15."},
+      {text:"Entre = 15 ; Dentro = 2",correct:false,fb:"También invertidos. Entre grupos = k − 1 = 2 ; dentro de grupos = N − k = 15."}
+    ]
+  },
+  {
+    id:"u4-019", unit:"U4", title:"Inflación del Error",
+    context:"Un analista insiste en comparar 5 grupos haciendo todas las pruebas t por pares posibles, cada una a α = 0.05.",
+    prompt:"¿Cuál es el riesgo principal?",
+    options:[
+      {text:"Que la probabilidad de al menos un falso positivo supere ampliamente el 5%",correct:true,fb:"¡Correcto! Con 5 grupos hay 10 comparaciones por pares. Haciendo muchas pruebas al 5% cada una, la probabilidad acumulada de al menos un Error Tipo I crece muy por encima del 5% nominal. Por eso se usa ANOVA."},
+      {text:"Que el p-valor de cada prueba sea siempre cero",correct:false,fb:"Los p-valores no se vuelven cero. El problema es la acumulación del riesgo de falsos positivos al hacer muchas comparaciones."},
+      {text:"Que disminuya la potencia a cero",correct:false,fb:"El problema no es la potencia sino la inflación del Error Tipo I (falsos positivos) por comparaciones múltiples."},
+      {text:"Que no se puedan calcular las medias",correct:false,fb:"Las medias se calculan sin problema. El riesgo es estadístico: inflar el Error Tipo I global."}
+    ]
+  },
+  {
+    id:"u4-020", unit:"U4", title:"Decisión en ANOVA",
+    context:"Una tabla ANOVA muestra F_calc = 2.1 y F_crítico = 3.68, con p-valor = 0.16 y α = 0.05.",
+    prompt:"¿Qué se decide?",
+    options:[
+      {text:"Rechazar H₀: hay diferencias entre las medias",correct:false,fb:"No: F_calc (2.1) < F_crítico (3.68) y p (0.16) > α (0.05). No hay evidencia para rechazar H₀."},
+      {text:"No rechazar H₀: no hay evidencia de diferencias entre las medias",correct:true,fb:"¡Correcto! Como F_calc < F_crítico y p (0.16) > α (0.05), no se rechaza H₀. Los datos son compatibles con que todas las medias sean iguales."},
+      {text:"Aplicar post-hoc de inmediato",correct:false,fb:"Las post-hoc solo se aplican si se rechaza H₀. Aquí no se rechaza, así que no corresponde post-hoc."},
+      {text:"Repetir con prueba t",correct:false,fb:"No corresponde: el resultado es claro (no significativo). Y cambiar a t por pares reintroduciría la inflación del Error Tipo I."}
+    ]
+  },
+  // ---- Bloque: Chi-cuadrado ----
+  {
+    id:"u4-021", unit:"U4", title:"Tipo de Prueba Chi-Cuadrado",
+    context:"Una analista quiere saber si la categoría de edad (Joven, Adulto, Senior) está relacionada con el dispositivo de compra (Móvil, Desktop).",
+    prompt:"¿Qué prueba debe usar?",
+    options:[
+      {text:"Chi-cuadrado de bondad de ajuste",correct:false,fb:"La bondad de ajuste aplica a UNA variable categórica vs una distribución esperada. Acá hay DOS variables categóricas relacionadas."},
+      {text:"Chi-cuadrado de independencia",correct:true,fb:"¡Exacto! Para evaluar si dos variables categóricas están asociadas, se construye una tabla de contingencia y se aplica χ² de independencia. H₀: las variables son independientes."},
+      {text:"Prueba t de Student",correct:false,fb:"La t compara medias de variables cuantitativas. Acá ambas variables son categóricas."},
+      {text:"Correlación de Pearson",correct:false,fb:"Pearson mide relación lineal entre dos variables CUANTITATIVAS. Para dos categóricas se usa χ² de independencia."}
+    ]
+  },
+  {
+    id:"u4-022", unit:"U4", title:"Bondad de Ajuste",
+    context:"Un sitio quiere saber si la distribución de registros por método (Email, Google, Facebook) sigue siendo la histórica 60/30/10 tras un rediseño.",
+    prompt:"¿Qué prueba corresponde?",
+    options:[
+      {text:"Chi-cuadrado de bondad de ajuste",correct:true,fb:"¡Correcto! Hay UNA variable categórica (método de registro) y se compara su distribución observada contra una distribución esperada/histórica (60/30/10). Eso es bondad de ajuste."},
+      {text:"Chi-cuadrado de independencia",correct:false,fb:"Independencia requiere DOS variables categóricas. Aquí solo hay una (método de registro) comparada contra proporciones teóricas."},
+      {text:"ANOVA",correct:false,fb:"ANOVA compara medias de variables cuantitativas. Aquí la variable es categórica y se comparan frecuencias."},
+      {text:"Regresión lineal",correct:false,fb:"La regresión modela relaciones entre variables cuantitativas. Aquí se contrastan frecuencias categóricas: bondad de ajuste."}
+    ]
+  },
+  {
+    id:"u4-023", unit:"U4", title:"Fórmula de Chi-Cuadrado",
+    context:"El estadístico χ² mide la discrepancia entre lo observado y lo esperado.",
+    prompt:"¿Cuál es su fórmula?",
+    options:[
+      {text:"χ² = Σ (O − E)² / E",correct:true,fb:"¡Correcto! Para cada celda se calcula (Observado − Esperado)² / Esperado, y se suman todas. Cuanto mayor la discrepancia entre O y E, mayor el χ² y más razones para rechazar H₀."},
+      {text:"χ² = Σ (O − E)",correct:false,fb:"Una suma simple de diferencias se cancelaría (positivos y negativos). Hay que elevar al cuadrado y dividir por E."},
+      {text:"χ² = Σ (O − E)² / O",correct:false,fb:"Casi: el denominador es el ESPERADO (E), no el observado (O). χ² = Σ (O − E)²/E."},
+      {text:"χ² = (O − E) / √n",correct:false,fb:"Esa estructura corresponde a otros estadísticos. El χ² suma (O − E)²/E sobre todas las celdas."}
+    ]
+  },
+  {
+    id:"u4-024", unit:"U4", title:"Supuesto Crítico en Chi-Cuadrado",
+    context:"Al armar una tabla de contingencia 4×3, una analista nota que 3 de las 12 celdas tienen frecuencia esperada entre 2 y 4.",
+    prompt:"¿Qué implicación tiene para la validez del χ²?",
+    options:[
+      {text:"Ninguna: mientras las frecuencias observadas sean > 5, la prueba es válida",correct:false,fb:"Confusión común. El supuesto se refiere a las frecuencias ESPERADAS (E), no a las observadas. La aproximación a χ² depende de las esperadas."},
+      {text:"Viola el supuesto de frecuencia esperada ≥ 5; el resultado podría ser poco fiable",correct:true,fb:"¡Correcto! La regla de Cochran: no más del 20% de las celdas con E < 5, y ninguna con E < 1. Acá 3 de 12 (25%) están por debajo de 5, lo que compromete la aproximación. Alternativas: agrupar categorías o usar Fisher exacto."},
+      {text:"Significa que ya hay una asociación fuerte",correct:false,fb:"No se concluye asociación a partir de las frecuencias esperadas. La asociación se evalúa con el χ² y su p-valor."},
+      {text:"Hay que cambiar a una prueba t",correct:false,fb:"La t no aplica a datos categóricos. Si se viola el supuesto: agrupar categorías o usar Fisher exacto."}
+    ]
+  },
+  {
+    id:"u4-025", unit:"U4", title:"Frecuencia Esperada",
+    context:"En una tabla de contingencia, una celda tiene total de fila = 150, total de columna = 140 y gran total N = 300.",
+    prompt:"¿Cuál es la frecuencia esperada de esa celda?",
+    options:[
+      {text:"70",correct:true,fb:"¡Correcto! E = (total fila × total columna) / N = (150 × 140) / 300 = 21.000 / 300 = 70."},
+      {text:"140",correct:false,fb:"140 es el total de columna, no la frecuencia esperada. E = (150 × 140)/300 = 70."},
+      {text:"45",correct:false,fb:"No coincide con la fórmula. E = (fila × columna)/N = (150×140)/300 = 70."},
+      {text:"300",correct:false,fb:"300 es el gran total N (el denominador), no la frecuencia esperada de la celda, que es 70."}
+    ]
+  },
+  {
+    id:"u4-026", unit:"U4", title:"Hipótesis en Independencia",
+    context:"Se evalúa si el canal de adquisición y la finalización de compra están asociados.",
+    prompt:"¿Cuál es la hipótesis nula en la prueba de independencia?",
+    options:[
+      {text:"Las dos variables son independientes (no hay asociación)",correct:true,fb:"¡Correcto! En χ² de independencia, H₀ siempre afirma que las variables son independientes (no están asociadas). H₁ afirma que sí hay asociación. Rechazar H₀ = hay relación entre las variables."},
+      {text:"Las dos variables están asociadas",correct:false,fb:"Esa es la H₁ (alternativa), no la nula. H₀ es siempre 'son independientes'."},
+      {text:"Las medias de los grupos son iguales",correct:false,fb:"Eso es la hipótesis de ANOVA (medias). En χ² de independencia se habla de asociación entre categóricas, no de medias."},
+      {text:"La correlación es cero",correct:false,fb:"La correlación cero es la H₀ de Pearson (variables cuantitativas). En χ² la nula es 'independencia' entre categóricas."}
+    ]
+  },
+  {
+    id:"u4-027", unit:"U4", title:"Grados de Libertad en Independencia",
+    context:"Una tabla de contingencia tiene 3 filas y 3 columnas.",
+    prompt:"¿Cuántos grados de libertad tiene la prueba χ² de independencia?",
+    options:[
+      {text:"4",correct:true,fb:"¡Correcto! gl = (filas − 1) × (columnas − 1) = (3 − 1) × (3 − 1) = 2 × 2 = 4."},
+      {text:"9",correct:false,fb:"9 es el número de celdas (3×3), no los grados de libertad. gl = (3−1)×(3−1) = 4."},
+      {text:"6",correct:false,fb:"No surge de la fórmula. gl = (filas−1)×(columnas−1) = 2×2 = 4."},
+      {text:"2",correct:false,fb:"2 sería (filas−1) o (columnas−1) por separado. Hay que multiplicarlos: 2×2 = 4."}
+    ]
+  },
+  {
+    id:"u4-028", unit:"U4", title:"Interpretar χ² Significativo",
+    context:"Un χ² de independencia entre género y tipo de producto da p-valor = 0.000003, con α = 0.05.",
+    prompt:"¿Qué se concluye?",
+    options:[
+      {text:"Hay asociación significativa entre género y tipo de producto",correct:true,fb:"¡Correcto! Como p < α, se rechaza H₀ (independencia). Existe evidencia de asociación entre las dos variables categóricas. El paso siguiente suele ser explorar la naturaleza de esa asociación (qué celdas se desvían más)."},
+      {text:"Las variables son independientes",correct:false,fb:"Al rechazar H₀ se concluye lo opuesto: hay asociación, NO independencia."},
+      {text:"El género causa el tipo de producto",correct:false,fb:"χ² detecta asociación, no causalidad. No se puede afirmar que una variable cause la otra solo por el χ²."},
+      {text:"No hay relación entre las variables",correct:false,fb:"Un p-valor tan bajo indica fuerte evidencia de relación. Se rechaza la independencia."}
+    ]
+  },
+  {
+    id:"u4-029", unit:"U4", title:"χ² No Implica Causalidad",
+    context:"Un χ² muestra asociación significativa entre usar la app móvil y completar más compras.",
+    prompt:"¿Qué NO se puede concluir?",
+    options:[
+      {text:"Que usar la app móvil CAUSA más compras",correct:true,fb:"¡Correcto! χ² detecta asociación, no causalidad. Podría haber una variable oculta (ej. los clientes más fieles usan más la app Y compran más). Afirmar causalidad a partir de χ² es un error."},
+      {text:"Que existe una asociación entre las variables",correct:false,fb:"Eso SÍ se puede concluir: el χ² significativo indica asociación. La consigna pide lo que NO se puede concluir."},
+      {text:"Que las variables no son independientes",correct:false,fb:"Eso SÍ se concluye al rechazar H₀. La consigna pide lo que NO se puede afirmar (la causalidad)."},
+      {text:"Que conviene investigar más la relación",correct:false,fb:"Investigar más siempre es válido. Lo que NO se puede afirmar es la causalidad directa."}
+    ]
+  },
+  {
+    id:"u4-030", unit:"U4", title:"Medidas de Asociación",
+    context:"Tras un χ² significativo, una analista quiere cuantificar QUÉ TAN FUERTE es la asociación entre dos variables categóricas.",
+    prompt:"¿Qué medida es apropiada?",
+    options:[
+      {text:"V de Cramér (o Phi para tablas 2×2)",correct:true,fb:"¡Correcto! El χ² indica SI hay asociación, pero no su fuerza. Medidas como Phi (tablas 2×2) o V de Cramér (tablas mayores) cuantifican la intensidad de la asociación, en una escala interpretable."},
+      {text:"El coeficiente de regresión b₁",correct:false,fb:"b₁ es de regresión lineal (variables cuantitativas). Para fuerza de asociación entre categóricas se usa Phi o V de Cramér."},
+      {text:"El estadístico F",correct:false,fb:"F es de ANOVA (comparación de medias). Para fuerza de asociación categórica se usa V de Cramér."},
+      {text:"La media de las diferencias",correct:false,fb:"Eso corresponde a pruebas apareadas sobre cuantitativas. Para asociación categórica: Phi o V de Cramér."}
+    ]
+  },
+  // ---- Bloque: correlación ----
+  {
+    id:"u4-031", unit:"U4", title:"Interpretación de Correlación",
+    context:"Un análisis muestra una correlación de Pearson r = −0.78 entre el tiempo de carga de la página y la tasa de conversión.",
+    prompt:"¿Cuál es la interpretación correcta?",
+    options:[
+      {text:"Relación lineal positiva moderada",correct:false,fb:"Atención al signo: r es negativo, lo que indica relación INVERSA, no positiva."},
+      {text:"Relación lineal negativa fuerte: a mayor tiempo de carga, menor conversión",correct:true,fb:"¡Exacto! r = −0.78 indica relación lineal negativa fuerte (|r| cercano a 1). Cuando una sube, la otra baja: tiempos de carga largos se asocian a conversiones más bajas. Pero ojo: correlación no implica causalidad."},
+      {text:"El tiempo de carga causa el 78% de la variación en conversión",correct:false,fb:"Dos errores: correlación no implica causalidad, y el % de varianza explicada es R² = r² = 0.61 (61%), no r."},
+      {text:"No hay relación entre las variables",correct:false,fb:"Un |r| de 0.78 indica relación fuerte, no ausencia. Sería 'sin relación' si r fuera cercano a 0."}
+    ]
+  },
+  {
+    id:"u4-032", unit:"U4", title:"Rango de r",
+    context:"Un estudiante reporta una correlación de Pearson de r = 1.4 entre inversión y ventas.",
+    prompt:"¿Qué se puede afirmar?",
+    options:[
+      {text:"Es un error: r siempre está entre −1 y +1",correct:true,fb:"¡Correcto! El coeficiente de Pearson está acotado entre −1 y +1. Un valor de 1.4 es imposible e indica un error de cálculo. r = +1 sería correlación lineal positiva perfecta."},
+      {text:"Indica una correlación más fuerte que +1",correct:false,fb:"No existe correlación 'más fuerte que +1'. El máximo es +1 (positiva perfecta). 1.4 es imposible."},
+      {text:"Significa que las variables son idénticas",correct:false,fb:"Aun siendo idénticas, r sería +1, no 1.4. El valor reportado está fuera del rango válido."},
+      {text:"Es válido si la muestra es grande",correct:false,fb:"El tamaño muestral no cambia el rango de r: siempre está en [−1, +1]. 1.4 es un error."}
+    ]
+  },
+  {
+    id:"u4-033", unit:"U4", title:"Signo vs Fuerza",
+    context:"Se comparan dos correlaciones: r₁ = −0.85 y r₂ = +0.40.",
+    prompt:"¿Cuál relación lineal es MÁS FUERTE?",
+    options:[
+      {text:"r₂, porque es positiva",correct:false,fb:"El signo indica dirección, no fuerza. Una correlación positiva no es 'más fuerte' por ser positiva."},
+      {text:"r₁, porque su valor absoluto es mayor (0.85 > 0.40)",correct:true,fb:"¡Correcto! La FUERZA de la correlación se mide por |r|, no por el signo. |−0.85| = 0.85 > 0.40, así que r₁ representa una relación lineal más fuerte (aunque sea negativa)."},
+      {text:"Ambas son igual de fuertes",correct:false,fb:"No: 0.85 y 0.40 tienen distinta magnitud. La de mayor |r| (0.85) es más fuerte."},
+      {text:"No se pueden comparar por tener signos distintos",correct:false,fb:"Sí se comparan: la fuerza se mide por |r|, independientemente del signo. r₁ es más fuerte."}
+    ]
+  },
+  {
+    id:"u4-034", unit:"U4", title:"Correlación NO es Causalidad",
+    context:"Se observa que la venta de helados y la de aires acondicionados están fuertemente correlacionadas.",
+    prompt:"¿Cuál es la explicación más razonable?",
+    options:[
+      {text:"Vender helados causa que se vendan aires acondicionados",correct:false,fb:"No hay relación causal directa entre ambos. La correlación se debe a un tercer factor común."},
+      {text:"Una variable oculta (la temperatura) impulsa ambas ventas",correct:true,fb:"¡Correcto! Es el ejemplo clásico de variable confusora: el calor aumenta tanto la venta de helados como la de aires. La correlación es real, pero la causa es una tercera variable, no una relación directa entre ellas."},
+      {text:"Es una correlación imposible",correct:false,fb:"La correlación es perfectamente posible y real. Lo que no es válido es inferir causalidad directa entre helados y aires."},
+      {text:"Los aires acondicionados causan el calor",correct:false,fb:"Eso no tiene sentido físico. La explicación correcta es la variable oculta común: la temperatura."}
+    ]
+  },
+  {
+    id:"u4-035", unit:"U4", title:"Importancia del Scatterplot",
+    context:"Dos variables tienen r = 0.05, pero al graficarlas se ve una clara relación en forma de U.",
+    prompt:"¿Qué enseña este caso?",
+    options:[
+      {text:"Que r captura cualquier tipo de relación",correct:false,fb:"Al contrario: este caso muestra que r NO captura relaciones no lineales. Una U marcada puede dar r ≈ 0."},
+      {text:"Que Pearson solo mide relación LINEAL; siempre hay que ver el diagrama de dispersión",correct:true,fb:"¡Correcto! r ≈ 0 indica ausencia de relación LINEAL, pero puede existir una relación no lineal fuerte (como una U). Por eso el scatterplot es indispensable: revela patrones que r no detecta."},
+      {text:"Que los datos están mal medidos",correct:false,fb:"Los datos pueden estar perfectos: simplemente la relación es no lineal, que r no capta. No es un error de medición."},
+      {text:"Que hay que aumentar la muestra",correct:false,fb:"El tamaño no es el problema. El punto es que Pearson solo mide linealidad; el gráfico revela la relación no lineal."}
+    ]
+  },
+  {
+    id:"u4-036", unit:"U4", title:"Hipótesis de Correlación",
+    context:"Se quiere probar si existe correlación lineal en la población entre inversión publicitaria y leads.",
+    prompt:"¿Cuál es la hipótesis nula?",
+    options:[
+      {text:"H₀: ρ = 0 (no hay correlación lineal poblacional)",correct:true,fb:"¡Correcto! La prueba de significancia de la correlación contrasta H₀: ρ = 0 (sin correlación lineal en la población) contra H₁: ρ ≠ 0. Rechazar H₀ indica correlación lineal significativa."},
+      {text:"H₀: r = 0 en la muestra",correct:false,fb:"La hipótesis es sobre el parámetro POBLACIONAL ρ (rho), no sobre el r muestral. r es el estimador."},
+      {text:"H₀: las medias son iguales",correct:false,fb:"Esa es la hipótesis de ANOVA. En correlación, H₀ es ρ = 0."},
+      {text:"H₀: las variables son categóricas",correct:false,fb:"Eso no es una hipótesis estadística. La nula de correlación es ρ = 0."}
+    ]
+  },
+  {
+    id:"u4-037", unit:"U4", title:"Outliers y Correlación",
+    context:"Un único punto atípico muy alejado del resto cambia drásticamente el valor de r.",
+    prompt:"¿Qué precaución sugiere esto?",
+    options:[
+      {text:"Que r puede ser muy sensible a outliers; conviene detectarlos con el scatterplot",correct:true,fb:"¡Correcto! Un solo outlier influyente puede inflar o reducir r de forma engañosa. Por eso es clave graficar los datos y evaluar si un punto atípico está distorsionando la correlación."},
+      {text:"Que los outliers nunca afectan a r",correct:false,fb:"Falso: los outliers pueden afectar fuertemente a r. De hecho, este caso lo demuestra."},
+      {text:"Que hay que eliminar siempre todos los datos extremos",correct:false,fb:"No se eliminan automáticamente: primero se investigan. Algunos outliers son datos válidos e importantes. La precaución es detectarlos y analizarlos."},
+      {text:"Que r se vuelve categórico",correct:false,fb:"r siempre es una medida cuantitativa entre −1 y +1. Los outliers afectan su valor, no su naturaleza."}
+    ]
+  },
+  {
+    id:"u4-038", unit:"U4", title:"r ≈ 0",
+    context:"Un estudio reporta r = 0.02 entre dos métricas.",
+    prompt:"¿Qué indica este valor?",
+    options:[
+      {text:"Una relación lineal fuerte",correct:false,fb:"Un |r| cercano a 0 indica relación lineal débil o nula, no fuerte. Lo fuerte es |r| cercano a 1."},
+      {text:"Ausencia de relación lineal apreciable entre las variables",correct:true,fb:"¡Correcto! r = 0.02 es prácticamente cero: no hay relación lineal apreciable. (Podría existir una relación no lineal, por eso conviene mirar el scatterplot, pero lineal no hay.)"},
+      {text:"Una relación negativa fuerte",correct:false,fb:"Para negativa fuerte, r debería ser cercano a −1. 0.02 indica ausencia de relación lineal."},
+      {text:"Que las variables son idénticas",correct:false,fb:"Variables idénticas darían r = +1. r = 0.02 indica lo opuesto: sin relación lineal."}
+    ]
+  },
+  // ---- Bloque: regresión ----
+  {
+    id:"u4-039", unit:"U4", title:"Interpretación de la Pendiente",
+    context:"Un modelo estima: Ventas = 1200 + 18.5 × Inversión, con la inversión en cientos de dólares y las ventas en unidades.",
+    prompt:"¿Cómo se interpreta la pendiente b₁ = 18.5?",
+    options:[
+      {text:"Por cada $100 adicionales de inversión, las ventas aumentan en promedio 18.5 unidades",correct:true,fb:"¡Perfecto! La pendiente es el cambio promedio en Y por cada unidad adicional de X. Como X está en cientos de dólares, una unidad = $100. Es un insight accionable: cuantifica el retorno esperado por cada $100 invertidos."},
+      {text:"Cuando la inversión es 0, las ventas son 18.5",correct:false,fb:"Eso describe el intercepto b₀, y además b₀ = 1200, no 18.5. La pendiente mide el cambio, no el valor en X = 0."},
+      {text:"El 18.5% de las ventas se explica por la inversión",correct:false,fb:"Eso sería interpretar R² (proporción de varianza explicada), no la pendiente."},
+      {text:"La correlación entre inversión y ventas es 0.185",correct:false,fb:"La pendiente no es la correlación. Son medidas distintas en escalas distintas."}
+    ]
+  },
+  {
+    id:"u4-040", unit:"U4", title:"Interpretación del Intercepto",
+    context:"En el modelo Ŷ = 29.15 + 20.68·X, donde X es la inversión en cientos de dólares (mínimo observado: $300).",
+    prompt:"¿Cómo se interpreta b₀ = 29.15, con la debida cautela?",
+    options:[
+      {text:"Es el valor predicho de Y cuando X = 0, pero X = 0 está fuera del rango observado (extrapolación)",correct:true,fb:"¡Correcto! b₀ es el valor predicho de Y cuando X = 0. Pero como la mínima inversión observada fue $300 (X = 3), X = 0 es una extrapolación: la interpretación literal puede no ser realista. Podría representar leads de otras fuentes."},
+      {text:"Es el aumento de Y por cada unidad de X",correct:false,fb:"Eso es la pendiente b₁ = 20.68, no el intercepto. b₀ es el valor de Y cuando X = 0."},
+      {text:"Es el coeficiente de determinación",correct:false,fb:"R² es otra cosa (proporción de varianza explicada). b₀ es el intercepto: valor de Y en X = 0."},
+      {text:"Es la correlación entre las variables",correct:false,fb:"El intercepto no es la correlación. Es el punto donde la recta corta el eje Y (X = 0)."}
+    ]
+  },
+  {
+    id:"u4-041", unit:"U4", title:"Coeficiente de Determinación",
+    context:"Una regresión de leads sobre inversión arroja R² = 0.97.",
+    prompt:"¿Qué significa este R²?",
+    options:[
+      {text:"El 97% de la variabilidad en los leads se explica por la inversión",correct:true,fb:"¡Correcto! R² es la proporción de la varianza de Y (leads) explicada por X (inversión) mediante el modelo. R² = 0.97 indica un ajuste muy bueno: la inversión explica el 97% de la variación en los leads."},
+      {text:"El modelo acierta el 97% de las predicciones exactas",correct:false,fb:"R² no es un porcentaje de aciertos exactos. Es la proporción de varianza explicada por el modelo."},
+      {text:"La pendiente vale 0.97",correct:false,fb:"R² no es la pendiente. Es la proporción de varianza de Y explicada por X."},
+      {text:"Hay un 97% de probabilidad de que el modelo sea correcto",correct:false,fb:"R² no es una probabilidad de que el modelo sea correcto. Es la fracción de varianza de Y que el modelo explica."}
+    ]
+  },
+  {
+    id:"u4-042", unit:"U4", title:"R² = r² en Regresión Simple",
+    context:"En una regresión lineal simple, la correlación entre X e Y es r = 0.9.",
+    prompt:"¿Cuál es el R² del modelo?",
+    options:[
+      {text:"0.81",correct:true,fb:"¡Correcto! En regresión lineal simple, R² = r². Con r = 0.9, R² = 0.9² = 0.81. Es decir, el 81% de la variabilidad de Y se explica por X."},
+      {text:"0.9",correct:false,fb:"0.9 es r, no R². En regresión simple, R² = r² = 0.81."},
+      {text:"0.95",correct:false,fb:"No surge de elevar r al cuadrado. R² = 0.9² = 0.81."},
+      {text:"1.8",correct:false,fb:"R² está entre 0 y 1, nunca puede ser 1.8. R² = r² = 0.81."}
+    ]
+  },
+  {
+    id:"u4-043", unit:"U4", title:"Predicción con el Modelo",
+    context:"El modelo es Ŷ = 29.15 + 20.68·X (X en cientos de dólares). Se planea invertir $700 (X = 7).",
+    prompt:"¿Cuántos leads predice el modelo aproximadamente?",
+    options:[
+      {text:"≈ 174 leads",correct:true,fb:"¡Correcto! Ŷ = 29.15 + 20.68 × 7 = 29.15 + 144.76 = 173.91 ≈ 174 leads. Se reemplaza X por 7 en la ecuación de regresión."},
+      {text:"≈ 50 leads",correct:false,fb:"No coincide con el cálculo. Ŷ = 29.15 + 20.68×7 ≈ 174, no 50."},
+      {text:"≈ 207 leads",correct:false,fb:"Ese valor sobreestima. El cálculo correcto: 29.15 + 20.68×7 ≈ 174 leads."},
+      {text:"≈ 700 leads",correct:false,fb:"700 es el monto invertido en dólares, no los leads. La predicción es Ŷ ≈ 174."}
+    ]
+  },
+  {
+    id:"u4-044", unit:"U4", title:"Peligro de Extrapolación",
+    context:"El máximo de inversión observado fue X = 10 ($1.000). Un gerente quiere predecir leads para X = 30 ($3.000).",
+    prompt:"¿Qué advertencia corresponde?",
+    options:[
+      {text:"Predecir en X = 30 es extrapolar muy lejos de los datos; la relación podría no mantenerse lineal",correct:true,fb:"¡Correcto! El modelo se ajustó con datos hasta X = 10. Predecir en X = 30 es extrapolación: fuera del rango observado, la relación lineal podría romperse (rendimientos decrecientes, saturación). Hay que ser muy cauteloso."},
+      {text:"La predicción será exacta porque el modelo es lineal",correct:false,fb:"La linealidad observada en [3, 10] no garantiza que se mantenga en X = 30. Extrapolar lejos es riesgoso."},
+      {text:"No se puede usar regresión para predecir nunca",correct:false,fb:"Sí se puede predecir, pero dentro o cerca del rango observado. El problema específico es extrapolar muy lejos."},
+      {text:"Hay que cambiar a Chi-cuadrado",correct:false,fb:"χ² es para categóricas. El problema no es la técnica sino extrapolar fuera del rango de los datos."}
+    ]
+  },
+  {
+    id:"u4-045", unit:"U4", title:"Significancia de la Pendiente",
+    context:"En la salida de regresión, el coeficiente de la inversión (b₁) tiene un p-valor de 0.0000012.",
+    prompt:"¿Qué se concluye sobre el predictor?",
+    options:[
+      {text:"La inversión es un predictor lineal significativo de los leads",correct:true,fb:"¡Correcto! La prueba sobre b₁ contrasta H₀: β₁ = 0 (X no predice Y) vs H₁: β₁ ≠ 0. Con p ≪ 0.05, se rechaza H₀: la inversión SÍ tiene un efecto lineal significativo sobre los leads."},
+      {text:"La inversión no aporta al modelo",correct:false,fb:"Un p-valor tan bajo indica lo contrario: la inversión es un predictor muy significativo. Se rechaza β₁ = 0."},
+      {text:"El intercepto es cero",correct:false,fb:"El p-valor de b₁ se refiere a la pendiente, no al intercepto. Y un p bajo indica que la pendiente es significativamente distinta de cero."},
+      {text:"R² es igual a 0.0000012",correct:false,fb:"Ese número es un p-valor, no el R². Indica que la pendiente es altamente significativa."}
+    ]
+  },
+  {
+    id:"u4-046", unit:"U4", title:"Correlación vs Regresión",
+    context:"Una analista duda entre reportar la correlación o el modelo de regresión.",
+    prompt:"¿Cuál es la diferencia clave entre ambas?",
+    options:[
+      {text:"La correlación DESCRIBE la fuerza/dirección de la relación; la regresión MODELA y permite PREDECIR",correct:true,fb:"¡Correcto! La correlación (r) resume cuán fuerte y en qué dirección se relacionan dos variables. La regresión va más allá: ajusta una ecuación (Ŷ = b₀ + b₁X) que permite predecir Y a partir de X y cuantificar el efecto."},
+      {text:"Son exactamente lo mismo",correct:false,fb:"No: la correlación describe la relación; la regresión la modela con una ecuación predictiva. Están relacionadas (R² = r²) pero no son lo mismo."},
+      {text:"La regresión solo sirve para variables categóricas",correct:false,fb:"La regresión lineal simple es para variables cuantitativas. Para categóricas se usa χ²."},
+      {text:"La correlación predice valores futuros",correct:false,fb:"La correlación no predice valores: solo mide la relación. La que predice es la regresión."}
+    ]
+  },
+  {
+    id:"u4-047", unit:"U4", title:"Tres Números Distintos",
+    context:"En un informe aparecen tres cifras de una misma regresión simple: r = 0.985, b₁ = 20.68 y R² = 0.97.",
+    prompt:"¿Cuál es la trampa conceptual frecuente con estas cifras?",
+    options:[
+      {text:"Confundir la pendiente, la correlación y el R² como si fueran lo mismo",correct:true,fb:"¡Correcto! Son tres cosas distintas: r (fuerza/dirección de la relación, entre −1 y 1), b₁ (cambio en Y por unidad de X, en las unidades del problema) y R² (proporción de varianza explicada). Mezclarlas es un error típico del parcial."},
+      {text:"Que los tres deberían ser iguales",correct:false,fb:"No tienen por qué ser iguales: miden cosas diferentes. r = 0.985, R² = r² = 0.97, y b₁ está en unidades de Y/X."},
+      {text:"Que r debería ser mayor que b₁",correct:false,fb:"No hay una relación de orden entre r y b₁: están en escalas distintas. La trampa es confundir sus significados."},
+      {text:"Que R² no se puede calcular con estos datos",correct:false,fb:"R² sí se calcula (= r²). La trampa real es confundir los tres conceptos entre sí."}
+    ]
+  },
+  {
+    id:"u4-048", unit:"U4", title:"Supuestos de Regresión",
+    context:"Para que la inferencia en regresión lineal simple sea válida, se asumen ciertas condiciones sobre los errores.",
+    prompt:"¿Cuál de estos NO es un supuesto del modelo de regresión?",
+    options:[
+      {text:"Linealidad de la relación entre X e Y",correct:false,fb:"Sí es un supuesto. No es la respuesta buscada."},
+      {text:"Homocedasticidad (varianza constante de los errores)",correct:false,fb:"Sí es un supuesto. No es la respuesta buscada."},
+      {text:"Normalidad de los errores",correct:false,fb:"Sí es un supuesto. No es la respuesta buscada."},
+      {text:"Que las variables sean categóricas",correct:true,fb:"¡Correcto! La regresión lineal simple trabaja con variables CUANTITATIVAS, no categóricas. Los supuestos reales son linealidad, independencia de errores, homocedasticidad y normalidad de los errores."}
+    ]
+  },
+  {
+    id:"u4-049", unit:"U4", title:"Prueba F en Regresión",
+    context:"La salida de regresión incluye una tabla ANOVA con un estadístico F y su 'Significance F'.",
+    prompt:"¿Qué evalúa esa prueba F en regresión simple?",
+    options:[
+      {text:"Si el modelo en su conjunto explica una porción significativa de la varianza de Y",correct:true,fb:"¡Correcto! La prueba F del modelo evalúa la significancia global de la regresión. En regresión SIMPLE, esta prueba F es equivalente a la prueba t sobre la pendiente β₁ (mismo resultado)."},
+      {text:"Si las dos variables son categóricas",correct:false,fb:"La F del modelo no evalúa tipos de variable. Evalúa la significancia global del modelo de regresión."},
+      {text:"El valor del intercepto",correct:false,fb:"El intercepto tiene su propia prueba t. La F evalúa el modelo en conjunto."},
+      {text:"La normalidad de los datos",correct:false,fb:"La normalidad se chequea con gráficos de residuos, no con la F del modelo. La F evalúa la significancia global."}
+    ]
+  },
+  {
+    id:"u4-050", unit:"U4", title:"Residuos",
+    context:"Tras ajustar una regresión, se grafican los residuos contra los valores predichos y se observa una clara forma de embudo (cono).",
+    prompt:"¿Qué supuesto se está violando?",
+    options:[
+      {text:"Homocedasticidad: la varianza de los errores no es constante",correct:true,fb:"¡Correcto! Una forma de embudo/cono en el gráfico de residuos indica heterocedasticidad: la dispersión de los errores cambia con el nivel de X (o de Ŷ). Esto viola el supuesto de varianza constante de los errores."},
+      {text:"Linealidad: la relación no es lineal",correct:false,fb:"La no linealidad se ve como una curva en los residuos, no como un embudo. El embudo apunta a varianza no constante (heterocedasticidad)."},
+      {text:"Que las variables son categóricas",correct:false,fb:"Eso no es un supuesto de residuos. El patrón en embudo indica heterocedasticidad."},
+      {text:"Ninguno: el embudo es lo ideal",correct:false,fb:"Al contrario: lo ideal es una nube sin patrón. El embudo señala heterocedasticidad, una violación del supuesto."}
+    ]
+  },
+  // ---- Bloque: integración y selección de prueba ----
+  {
+    id:"u4-051", unit:"U4", title:"Seleccionar la Prueba (3 grupos cuantitativa)",
+    context:"Un e-commerce mide el valor promedio del carrito de usuarios expuestos a 3 diseños distintos de página de producto.",
+    prompt:"¿Qué prueba corresponde?",
+    options:[
+      {text:"ANOVA de un factor",correct:true,fb:"¡Correcto! Variable cuantitativa (valor del carrito) comparada entre 3 grupos (diseños). Para 3 o más grupos, la herramienta es ANOVA de un factor, no múltiples pruebas t."},
+      {text:"Prueba t de Welch",correct:false,fb:"La t de Welch es para comparar DOS grupos. Con 3 diseños hace falta ANOVA."},
+      {text:"Chi-cuadrado de independencia",correct:false,fb:"χ² es para categóricas. El valor del carrito es cuantitativo, y comparamos 3 medias: ANOVA."},
+      {text:"Correlación de Pearson",correct:false,fb:"Pearson mide relación lineal entre dos cuantitativas, no compara las medias de 3 grupos. Corresponde ANOVA."}
+    ]
+  },
+  {
+    id:"u4-052", unit:"U4", title:"Seleccionar la Prueba (2 categóricas)",
+    context:"Se quiere saber si el canal de adquisición (SEO, PPC, Social) está asociado con que el usuario compre o no (Sí/No).",
+    prompt:"¿Qué prueba corresponde?",
+    options:[
+      {text:"Chi-cuadrado de independencia",correct:true,fb:"¡Correcto! Dos variables categóricas (canal y compra Sí/No) y la pregunta es si están asociadas. Eso es exactamente χ² de independencia con una tabla de contingencia."},
+      {text:"ANOVA",correct:false,fb:"ANOVA compara medias de una variable cuantitativa entre grupos. Aquí ambas variables son categóricas."},
+      {text:"Regresión lineal",correct:false,fb:"La regresión lineal modela relaciones entre cuantitativas. Aquí las variables son categóricas: χ²."},
+      {text:"Prueba t apareada",correct:false,fb:"La t apareada es para cuantitativas medidas en los mismos sujetos. Aquí se evalúa asociación entre dos categóricas: χ²."}
+    ]
+  },
+  {
+    id:"u4-053", unit:"U4", title:"Seleccionar la Prueba (predecir)",
+    context:"Una empresa quiere construir una fórmula que PREDIGA las ventas a partir del gasto publicitario.",
+    prompt:"¿Qué herramienta corresponde?",
+    options:[
+      {text:"Regresión lineal simple",correct:true,fb:"¡Correcto! Cuando el objetivo es modelar y PREDECIR el valor de una variable cuantitativa (ventas) a partir de otra (gasto), la herramienta es la regresión lineal simple: Ŷ = b₀ + b₁X."},
+      {text:"Chi-cuadrado de bondad de ajuste",correct:false,fb:"χ² trabaja con frecuencias categóricas, no predice valores cuantitativos. Para predecir ventas: regresión."},
+      {text:"ANOVA",correct:false,fb:"ANOVA compara medias entre grupos, no construye una ecuación predictiva. Para predecir: regresión."},
+      {text:"Prueba t de una media",correct:false,fb:"La t de una media contrasta un promedio contra un valor. No predice. Para predecir ventas desde el gasto: regresión."}
+    ]
+  },
+  {
+    id:"u4-054", unit:"U4", title:"Seleccionar la Prueba (2 grupos independientes)",
+    context:"Se compara el ticket promedio de clientes que vieron el banner A con el de OTROS clientes distintos que vieron el banner B.",
+    prompt:"¿Qué prueba corresponde?",
+    options:[
+      {text:"Prueba t para muestras independientes (Welch)",correct:true,fb:"¡Correcto! Dos grupos de clientes DISTINTOS (independientes) y una variable cuantitativa (ticket). Corresponde la prueba t para muestras independientes, con Welch como opción robusta por defecto."},
+      {text:"Prueba t apareada",correct:false,fb:"No son los mismos clientes: son grupos distintos (los que vieron A vs los que vieron B). Por eso son independientes, no apareadas."},
+      {text:"ANOVA",correct:false,fb:"ANOVA es para 3+ grupos. Acá hay solo 2 (banner A vs B): basta una prueba t."},
+      {text:"Chi-cuadrado",correct:false,fb:"χ² es para categóricas. El ticket es cuantitativo, y comparamos dos medias: prueba t independiente."}
+    ]
+  },
+  {
+    id:"u4-055", unit:"U4", title:"Seleccionar la Prueba (relación lineal)",
+    context:"Se quiere medir QUÉ TAN FUERTE es la relación lineal entre el número de reseñas de un producto y su volumen de ventas, sin predecir todavía.",
+    prompt:"¿Qué herramienta corresponde?",
+    options:[
+      {text:"Correlación de Pearson",correct:true,fb:"¡Correcto! Para medir la fuerza y dirección de la relación lineal entre dos variables cuantitativas (reseñas y ventas), sin construir aún un modelo predictivo, la herramienta es el coeficiente de correlación de Pearson (r)."},
+      {text:"Chi-cuadrado",correct:false,fb:"χ² es para categóricas. Reseñas y ventas son cuantitativas: Pearson."},
+      {text:"ANOVA",correct:false,fb:"ANOVA compara medias entre grupos. Aquí se mide la relación entre dos variables cuantitativas: correlación."},
+      {text:"Prueba t apareada",correct:false,fb:"La t apareada compara dos mediciones de los mismos sujetos. Aquí se mide asociación lineal entre dos variables: Pearson."}
+    ]
+  },
+  {
+    id:"u4-056", unit:"U4", title:"Seleccionar la Prueba (bondad de ajuste)",
+    context:"Se quiere verificar si la distribución de visitantes por dispositivo (Móvil, Tablet, Desktop) coincide con las proporciones proyectadas a inicio de año.",
+    prompt:"¿Qué prueba corresponde?",
+    options:[
+      {text:"Chi-cuadrado de bondad de ajuste",correct:true,fb:"¡Correcto! Una sola variable categórica (dispositivo) cuya distribución observada se compara contra una distribución esperada (las proyecciones). Eso es bondad de ajuste."},
+      {text:"Chi-cuadrado de independencia",correct:false,fb:"Independencia necesita DOS variables categóricas. Aquí hay una sola (dispositivo) comparada contra proporciones teóricas."},
+      {text:"ANOVA",correct:false,fb:"ANOVA compara medias cuantitativas. Aquí se contrastan frecuencias de una variable categórica: bondad de ajuste."},
+      {text:"Regresión",correct:false,fb:"La regresión modela cuantitativas. Aquí se comparan frecuencias categóricas con lo esperado: bondad de ajuste."}
+    ]
+  },
+  {
+    id:"u4-057", unit:"U4", title:"Varianzas Iguales vs Desiguales",
+    context:"Antes de una prueba t de dos muestras independientes, Excel ofrece dos variantes: 'suponiendo varianzas iguales' y 'suponiendo varianzas desiguales'.",
+    prompt:"¿Cuál conviene elegir si no hay información clara sobre las varianzas?",
+    options:[
+      {text:"La de varianzas desiguales (Welch), por ser la opción más robusta y segura",correct:true,fb:"¡Correcto! Sin razones fuertes para asumir varianzas iguales, la variante de Welch (varianzas desiguales) es la más segura: mantiene su validez aunque las varianzas difieran. Es la recomendación por defecto."},
+      {text:"La de varianzas iguales, siempre",correct:false,fb:"Asumir varianzas iguales sin verificarlo es arriesgado. Si la suposición falla, la prueba pierde validez. Welch es más seguro."},
+      {text:"Cualquiera, dan exactamente lo mismo",correct:false,fb:"No siempre coinciden: cuando las varianzas difieren, los resultados pueden cambiar. Por eso Welch es la opción robusta."},
+      {text:"Ninguna; hay que usar ANOVA",correct:false,fb:"Con dos grupos, la t es lo correcto. ANOVA es para 3+. La elección segura entre las variantes t es Welch."}
+    ]
+  },
+  {
+    id:"u4-058", unit:"U4", title:"Cola de la Prueba en Dos Medias",
+    context:"Se quiere demostrar que el rediseño REDUCE el tiempo promedio de checkout respecto al diseño anterior.",
+    prompt:"¿Qué tipo de prueba de diferencia de medias corresponde?",
+    options:[
+      {text:"Unilateral (de una cola), en la dirección de la reducción",correct:true,fb:"¡Correcto! 'Reduce' indica una dirección específica (el nuevo tiempo es menor). Corresponde una prueba unilateral, con la región de rechazo del lado que captura la disminución."},
+      {text:"Bilateral siempre, porque comparamos dos diseños",correct:false,fb:"Comparar dos diseños no obliga a bilateral. La palabra 'reduce' marca una dirección clara: unilateral."},
+      {text:"No corresponde prueba de hipótesis",correct:false,fb:"Sí corresponde: hay dos medias a comparar con una dirección esperada (reducción). Es una prueba t unilateral."},
+      {text:"Chi-cuadrado de independencia",correct:false,fb:"χ² es para categóricas. El tiempo es cuantitativo y comparamos dos medias con dirección: t unilateral."}
+    ]
+  },
+  {
+    id:"u4-059", unit:"U4", title:"Interpretar Resultado de Welch",
+    context:"Una prueba t de Welch sobre el AOV de dos diseños de email da p-valor unilateral = 0.0073, con α = 0.05.",
+    prompt:"¿Qué se concluye y qué se hace?",
+    options:[
+      {text:"Se rechaza H₀: el diseño con mayor AOV es significativamente mejor; conviene implementarlo",correct:true,fb:"¡Correcto! Como p (0.0073) < α (0.05), se rechaza H₀. Hay evidencia de que un diseño genera un AOV significativamente mayor. La decisión de negocio: implementar ese diseño y seguir monitoreando."},
+      {text:"No se rechaza H₀: los diseños rinden igual",correct:false,fb:"p = 0.0073 < 0.05, así que SÍ se rechaza H₀. Hay diferencia significativa, no igualdad."},
+      {text:"El resultado es inválido por usar Welch",correct:false,fb:"Welch es una prueba válida y robusta. El resultado (p < α) indica diferencia significativa."},
+      {text:"Hay que aplicar ANOVA ahora",correct:false,fb:"ANOVA es para 3+ grupos. Con dos diseños y un resultado claro, la conclusión es directa: implementar el diseño superior."}
+    ]
+  },
+  {
+    id:"u4-060", unit:"U4", title:"Síntesis del Árbol de Decisión",
+    context:"Un estudiante quiere un criterio rápido para elegir la prueba correcta en el parcial.",
+    prompt:"¿Cuál es el primer filtro más útil para decidir?",
+    options:[
+      {text:"Determinar si la variable de interés es cuantitativa o categórica",correct:true,fb:"¡Correcto! El primer filtro del árbol de decisión es el TIPO de variable: si es categórica → familia Chi-cuadrado; si es cuantitativa → según el número de grupos y el diseño se elige t, ANOVA, correlación o regresión. Empezar por ahí ordena toda la decisión."},
+      {text:"Calcular siempre primero el p-valor",correct:false,fb:"No se puede calcular un p-valor sin antes elegir la prueba. El primer paso es identificar el tipo de variable y la pregunta."},
+      {text:"Asumir que siempre es ANOVA",correct:false,fb:"ANOVA es solo para 3+ grupos con variable cuantitativa. No es un default universal: depende del tipo de variable y del diseño."},
+      {text:"Elegir la prueba con el nombre más corto",correct:false,fb:"La elección es conceptual, no por el nombre. El criterio correcto arranca por el tipo de variable y la pregunta de negocio."}
+    ]
+  }
+
+];
+
+// ===== ESTADO =====
+// La sesión guarda las preguntas ya muestreadas y con opciones barajadas,
+// de modo que el progreso (resume) y el resultado referencien la sesión activa.
+const QUESTIONS_PER_ATTEMPT = 20;
+const U3_PER_ATTEMPT = 10;
+const U4_PER_ATTEMPT = 10;
+
+let state = {
+  index: 0,
+  selected: null,
+  locked: false,
+  questions: [],   // preguntas de ESTA sesión (subconjunto barajado de BANK)
+  answers: [],     // {qid, selectedIdx, correctIdx, correct, unit}
+  finished: false
+};
+
+const app = document.getElementById('app');
+const progressWrap = document.getElementById('progressWrap');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+const progressScore = document.getElementById('progressScore');
+
+// ===== UTILIDADES DE ALEATORIEDAD =====
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function sampleN(arr, n){
+  return shuffle(arr).slice(0, n);
+}
+
+// Construye una sesión nueva: muestrea 10 U3 + 10 U4, baraja el orden global,
+// y baraja las opciones de cada pregunta (registrando cuál quedó correcta).
+function buildSession(){
+  const u3Pool = BANK.filter(q => q.unit === 'U3');
+  const u4Pool = BANK.filter(q => q.unit === 'U4');
+  const picked = [
+    ...sampleN(u3Pool, U3_PER_ATTEMPT),
+    ...sampleN(u4Pool, U4_PER_ATTEMPT)
+  ];
+  const ordered = shuffle(picked);
+  // Barajar opciones de cada pregunta
+  return ordered.map(q => {
+    const opts = shuffle(q.options);
+    return {
+      id: q.id,
+      unit: q.unit,
+      title: q.title,
+      context: q.context,
+      prompt: q.prompt,
+      options: opts,
+      correctIdx: opts.findIndex(o => o.correct)
+    };
+  });
+}
+
+// ===== PERSISTENCIA =====
+function saveProgress(){
+  try{ localStorage.setItem('sim_p2_state', JSON.stringify(state)); }catch(e){}
+}
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem('sim_p2_state');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      // compatibilidad: solo restaurar si tiene la sesión guardada
+      if(parsed && typeof parsed.index === 'number' && Array.isArray(parsed.questions) && parsed.questions.length){
+        return parsed;
+      }
+    }
+  }catch(e){}
+  return null;
+}
+function clearProgress(){
+  try{ localStorage.removeItem('sim_p2_state'); }catch(e){}
+}
+
+function newState(){
+  return {
+    index: 0,
+    selected: null,
+    locked: false,
+    questions: buildSession(),
+    answers: [],
+    finished: false
+  };
+}
+
+function updateProgress(){
+  if(state.finished){
+    progressWrap.style.display = 'none';
+    return;
+  }
+  progressWrap.style.display = 'block';
+  const total = state.questions.length;
+  const pct = (state.index / total) * 100;
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = `Pregunta ${state.index + 1} de ${total}`;
+  const correct = state.answers.filter(a => a.correct).length;
+  progressScore.textContent = `${correct} ${correct === 1 ? 'correcta' : 'correctas'}`;
+}
+
+function letterFor(i){return ['A','B','C','D','E','F'][i]}
+
+function renderStart(){
+  app.innerHTML = `
+    <div class="card" style="text-align:center;padding:32px 24px">
+      <h2 style="font-size:20px;margin-bottom:10px;color:var(--ink)">Listo para empezar</h2>
+      <p style="color:var(--ink-soft);font-size:14.5px;margin-bottom:14px;max-width:520px;margin-left:auto;margin-right:auto">
+        ${QUESTIONS_PER_ATTEMPT} preguntas estilo banco (${U3_PER_ATTEMPT} de la Unidad 3 y ${U4_PER_ATTEMPT} de la Unidad 4),
+        elegidas al azar de un banco de ${BANK.length}. Al elegir una opción verás feedback inmediato.
+      </p>
+      <p style="color:var(--ink-soft);font-size:13px;margin-bottom:22px;max-width:520px;margin-left:auto;margin-right:auto">
+        <strong>Cada intento es distinto:</strong> las preguntas y el orden de las opciones rotan. Hacelo varias veces para cubrir todo el banco. Tu progreso se guarda en este navegador.
+      </p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" id="startBtn">Comenzar simulador</button>
+        <button class="btn btn-ghost" id="resumeBtn" style="display:none">Continuar donde dejé</button>
+      </div>
+    </div>
+  `;
+  const saved = loadProgress();
+  if(saved && !saved.finished && saved.index > 0){
+    const resumeBtn = document.getElementById('resumeBtn');
+    resumeBtn.style.display = 'inline-flex';
+    resumeBtn.onclick = ()=>{
+      state = saved;
+      renderQuestion();
+    };
+  }
+  document.getElementById('startBtn').onclick = ()=>{
+    clearProgress();
+    state = newState();
+    saveProgress();
+    renderQuestion();
+  };
+}
+
+function renderQuestion(){
+  if(state.index >= state.questions.length){
+    state.finished = true;
+    saveProgress();
+    renderResult();
+    return;
+  }
+  updateProgress();
+  const q = state.questions[state.index];
+  const unitClass = q.unit === 'U3' ? 'u3' : 'u4';
+
+  const ctxHTML = q.context.split('\n').map(p=>`<p>${p}</p>`).join('');
+  const optsHTML = q.options.map((opt,i)=>`
+    <button class="option" data-idx="${i}">
+      <span class="option-letter">${letterFor(i)}</span>
+      <span class="option-text">${opt.text}</span>
+    </button>
+  `).join('');
+
+  app.innerHTML = `
+    <div class="card">
+      <div class="q-tag ${unitClass}">Unidad ${q.unit.slice(1)} · ${q.title}</div>
+      <div class="q-context">${ctxHTML}</div>
+      <div class="q-prompt">${q.prompt}</div>
+      <div class="options" id="optionsBox">${optsHTML}</div>
+      <div id="feedbackBox"></div>
+      <div class="controls">
+        <button class="btn btn-ghost" id="restartBtn">↻ Reiniciar</button>
+        <button class="btn btn-primary" id="nextBtn" disabled>Siguiente →</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('restartBtn').onclick = ()=>{
+    if(confirm('¿Reiniciar el simulador? Se generará un nuevo set de preguntas al azar.')){
+      clearProgress();
+      state = newState();
+      renderStart();
+    }
+  };
+
+  // Si la pregunta ya fue respondida (resume tras recargar), re-pintar el estado
+  const prior = state.answers.find(a => a.qid === q.id && a.index === state.index);
+
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(btn=>{
+    btn.onclick = ()=>{
+      if(state.locked) return;
+      const idx = parseInt(btn.dataset.idx,10);
+      state.selected = idx;
+      state.locked = true;
+
+      const correctIdx = q.correctIdx;
+      const isCorrect = idx === correctIdx;
+      state.answers.push({
+        qid: q.id,
+        index: state.index,
+        selectedIdx: idx,
+        correctIdx: correctIdx,
+        correct: isCorrect,
+        unit: q.unit
+      });
+
+      opts.forEach((b,i)=>{
+        b.classList.add('disabled');
+        if(i === correctIdx) b.classList.add('correct');
+        else if(i === idx) b.classList.add('incorrect');
+        else b.classList.add('dim');
+      });
+
+      const fb = document.getElementById('feedbackBox');
+      const opt = q.options[idx];
+      fb.innerHTML = `
+        <div class="feedback ${isCorrect ? 'ok' : 'bad'}">
+          <div class="feedback-title">${isCorrect ? '✓ Correcto' : '✗ Revisemos'}</div>
+          <div>${opt.fb}</div>
+        </div>
+      `;
+
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = false;
+      nextBtn.textContent = state.index === state.questions.length - 1 ? 'Ver resultado →' : 'Siguiente →';
+      saveProgress();
+      updateProgress();
+    };
+  });
+
+  document.getElementById('nextBtn').onclick = ()=>{
+    state.index++;
+    state.selected = null;
+    state.locked = false;
+    saveProgress();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+}
+
+function renderResult(){
+  updateProgress();
+  const total = state.questions.length;
+  const correct = state.answers.filter(a=>a.correct).length;
+  const pct = Math.round((correct/total)*100);
+
+  const u3Answers = state.answers.filter(a=>a.unit==='U3');
+  const u4Answers = state.answers.filter(a=>a.unit==='U4');
+  const u3Correct = u3Answers.filter(a=>a.correct).length;
+  const u4Correct = u4Answers.filter(a=>a.correct).length;
+
+  let msg;
+  if(pct >= 90) msg = '¡Excelente! Estás muy preparado para el parcial.';
+  else if(pct >= 75) msg = 'Buen nivel. Repasá los temas que fallaste y vas a estar listo.';
+  else if(pct >= 60) msg = 'Aprobás, pero conviene reforzar los conceptos donde fallaste antes del parcial.';
+  else if(pct >= 40) msg = 'Hay base, pero necesitás más estudio. Revisá especialmente los conceptos fundacionales.';
+  else msg = 'Conviene repasar el material desde el principio antes del parcial.';
+
+  const wrong = state.answers.filter(a=>!a.correct);
+  // mapa id -> pregunta de la sesión para reconstruir el repaso
+  const byId = {};
+  state.questions.forEach(q => { byId[q.id] = q; });
+
+  let reviewHTML = '';
+  if(wrong.length > 0){
+    reviewHTML = `
+      <div class="review-list">
+        <h3>📌 Para repasar (${wrong.length} ${wrong.length===1?'pregunta':'preguntas'})</h3>
+        ${wrong.map(a=>{
+          const q = byId[a.qid];
+          return `
+            <div class="review-item">
+              <div class="ri-q">[${q.unit}] ${q.title}: ${q.prompt}</div>
+              <div class="ri-wrong">${q.options[a.selectedIdx].text}</div>
+              <div class="ri-right">${q.options[a.correctIdx].text}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  app.innerHTML = `
+    <div class="result-card">
+      <div class="score-label">Resultado final</div>
+      <div class="score-big">${correct}/${total}</div>
+      <div class="score-label">${pct}% correcto</div>
+      <div class="score-msg">${msg}</div>
+
+      <div class="score-breakdown">
+        <div class="breakdown-card u3">
+          <div class="unit">Unidad 3</div>
+          <div class="score">${u3Correct}/${u3Answers.length}</div>
+          <div class="detail">Pruebas de hipótesis</div>
+        </div>
+        <div class="breakdown-card u4">
+          <div class="unit">Unidad 4</div>
+          <div class="score">${u4Correct}/${u4Answers.length}</div>
+          <div class="detail">ANOVA · χ² · Correlación · Regresión</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+        <button class="btn btn-primary" id="againBtn">↻ Nuevo intento (otras preguntas)</button>
+        <button class="btn btn-ghost" id="reviewBtn">📘 Volver al repaso</button>
+      </div>
+
+      ${reviewHTML}
+    </div>
+  `;
+
+  document.getElementById('againBtn').onclick = ()=>{
+    clearProgress();
+    state = newState();
+    renderStart();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  document.getElementById('reviewBtn').onclick = ()=>{
+    document.querySelector('details.review').setAttribute('open','');
+    document.querySelector('details.review').scrollIntoView({behavior:'smooth'});
+  };
+}
+
+// Boot
+renderStart();
+</script>
+</body>
+</html>
